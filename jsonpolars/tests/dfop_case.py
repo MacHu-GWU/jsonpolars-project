@@ -19,7 +19,6 @@ class Case:
     expected_output_records: T.List[T.Dict[str, T.Any]] = dataclasses.field()
 
     def run_test(self):
-
         print("---------- input_records ----------")
         rprint(self.input_records)
         print("---------- dfop ----------")

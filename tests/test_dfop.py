@@ -55,6 +55,76 @@ case4 = Case(
     ),
     expected_output_records=[{"a": 1, "b": 2, "c": 3}],
 )
+case5 = Case(
+    input_records=[{"id": 1}, {"id": 2}, {"id": 3}, {"id": 4}],
+    dfop=dfop.Head(n=2),
+    expected_output_records=[{"id": 1}, {"id": 2}],
+)
+case6 = Case(
+    input_records=[{"id": 1}, {"id": 2}, {"id": 3}, {"id": 4}],
+    dfop=dfop.Tail(n=2),
+    expected_output_records=[{"id": 3}, {"id": 4}],
+)
+case7 = Case(
+    input_records=[{"id": 1}, {"id": 2}, {"id": 3}],
+    dfop=dfop.Count(),
+    expected_output_records=[{"id": 3}],
+)
+case8 = Case(
+    input_records=[{"id": 2}, {"id": 3}, {"id": 1}],
+    dfop=dfop.Sort(by=["id"]),
+    expected_output_records=[{"id": 1}, {"id": 2}, {"id": 3}],
+)
+case9 = Case(
+    input_records=[
+        {"id": 1, "name": "a"},
+        {"id": 1, "name": "b"},
+        {"id": 2, "name": "c"},
+        {"id": 2, "name": "d"},
+    ],
+    dfop=dfop.Sort(by=["id", "name"], descending=[True, False]),
+    expected_output_records=[
+        {"id": 2, "name": "c"},
+        {"id": 2, "name": "d"},
+        {"id": 1, "name": "a"},
+        {"id": 1, "name": "b"},
+    ],
+)
+case10 = Case(
+    input_records=[
+        {"id": 1, "name": "a"},
+        {"id": 2, "name": None},
+        {"id": None, "name": "c"},
+    ],
+    dfop=dfop.DropNulls(),
+    expected_output_records=[
+        {"id": 1, "name": "a"},
+    ],
+)
+case11 = Case(
+    input_records=[
+        {"id": 1, "name": "a"},
+        {"id": 2, "name": None},
+        {"id": None, "name": "c"},
+    ],
+    dfop=dfop.DropNulls(subset=["id"]),
+    expected_output_records=[
+        {"id": 1, "name": "a"},
+        {"id": 2, "name": None},
+    ],
+)
+case12 = Case(
+    input_records=[
+        {"id": 1, "name": "a"},
+        {"id": 2, "name": None},
+        {"id": None, "name": "c"},
+    ],
+    dfop=dfop.DropNulls(subset=["name"]),
+    expected_output_records=[
+        {"id": 1, "name": "a"},
+        {"id": None, "name": "c"},
+    ],
+)
 
 
 def test():
@@ -64,6 +134,14 @@ def test():
     case2.run_test()
     case3.run_test()
     case4.run_test()
+    case5.run_test()
+    case6.run_test()
+    case7.run_test()
+    case8.run_test()
+    case9.run_test()
+    case10.run_test()
+    case11.run_test()
+    case12.run_test()
 
 
 if __name__ == "__main__":

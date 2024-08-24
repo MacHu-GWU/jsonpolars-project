@@ -133,3 +133,103 @@ class WithColumns(BaseDfop):
 
 
 dfop_enum_to_klass_mapping[DfopEnum.with_columns.value] = WithColumns
+
+
+@dataclasses.dataclass
+class Head(BaseDfop):
+    """
+    https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.head.html
+    """
+
+    type: str = dataclasses.field(default=DfopEnum.head.value)
+    n: int = dataclasses.field(default=5)
+
+    @classmethod
+    def from_dict(cls, dct: T.Dict[str, T.Any]):
+        return cls(n=dct["n"])
+
+    def to_polars(self, df: pl.DataFrame) -> pl.DataFrame:
+        return df.head(self.n)
+
+
+dfop_enum_to_klass_mapping[DfopEnum.head.value] = Head
+
+
+@dataclasses.dataclass
+class Tail(BaseDfop):
+    """
+    https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.tail.html
+    """
+
+    type: str = dataclasses.field(default=DfopEnum.tail.value)
+    n: int = dataclasses.field(default=5)
+
+    @classmethod
+    def from_dict(cls, dct: T.Dict[str, T.Any]):
+        return cls(n=dct["n"])
+
+    def to_polars(self, df: pl.DataFrame) -> pl.DataFrame:
+        return df.tail(self.n)
+
+
+dfop_enum_to_klass_mapping[DfopEnum.tail.value] = Tail
+
+
+@dataclasses.dataclass
+class Sort(BaseDfop):
+    """
+    https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.sort.html#
+    """
+
+    type: str = dataclasses.field(default=DfopEnum.sort.value)
+    by: T.List["IntoExpr"] = dataclasses.field(default=REQUIRED)
+    descending: T.Union[bool, T.List[bool]] = dataclasses.field(default=False)
+    nulls_last: T.Union[bool, T.List[bool]] = dataclasses.field(default=False)
+    multithreaded: bool = dataclasses.field(default=True)
+    maintain_order: bool = dataclasses.field(default=False)
+
+    @classmethod
+    def from_dict(cls, dct: T.Dict[str, T.Any]):
+        return cls(
+            by=[expr.to_jsonpolars_into_expr(expr_like) for expr_like in dct["by"]],
+            descending=dct["descending"],
+            nulls_last=dct["nulls_last"],
+            multithreaded=dct["multithreaded"],
+            maintain_order=dct["maintain_order"],
+        )
+
+    def to_polars(self, df: pl.DataFrame) -> pl.DataFrame:
+        return df.sort(
+            *[expr.to_polars_into_expr(expr_like) for expr_like in self.by],
+            descending=self.descending,
+            nulls_last=self.nulls_last,
+            multithreaded=self.multithreaded,
+            maintain_order=self.maintain_order,
+        )
+
+
+dfop_enum_to_klass_mapping[DfopEnum.sort.value] = Sort
+
+
+@dataclasses.dataclass
+class DropNulls(BaseDfop):
+    """
+    https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.drop_nulls.html
+    """
+
+    type: str = dataclasses.field(default=DfopEnum.drop_nulls.value)
+    subset: T.List["ColumnNameOrSelector"] = dataclasses.field(default=None)
+
+    @classmethod
+    def from_dict(cls, dct: T.Dict[str, T.Any]):
+        if dct["subset"] is None:
+            subset = None
+        else:
+            subset, _ = _extract_exprs_named_exprs(dct["subset"], {})
+        return cls(subset=subset)
+
+    def to_polars(self, df: pl.DataFrame) -> pl.DataFrame:
+        return df.drop_nulls(subset=self.subset)
+
+
+dfop_enum_to_klass_mapping[DfopEnum.drop_nulls.value] = DropNulls

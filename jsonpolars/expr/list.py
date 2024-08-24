@@ -6,7 +6,7 @@ import dataclasses
 import polars as pl
 
 from ..sentinel import NOTHING, REQUIRED, OPTIONAL
-from ..base_expr import ExprEnum, BaseExpr, expr_enum_to_klass_mapping
+from ..base_expr import ExprEnum, BaseExpr, expr_enum_to_klass_mapping, parse_expr
 
 if T.TYPE_CHECKING:  # pragma: no cover
     from .api import T_EXPR
@@ -20,7 +20,7 @@ class List(BaseExpr):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            expr=expr_enum_to_klass_mapping[dct["expr"]["type"]].from_dict(dct["expr"]),
+            expr=parse_expr(dct["expr"]),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -43,11 +43,11 @@ class ListGet(BaseExpr):
         if isinstance(index, int):
             pass
         elif isinstance(index, dict):
-            index = expr_enum_to_klass_mapping[index["type"]].from_dict(index)
+            index = parse_expr(index)
         else:  # pragma: no cover
             raise ValueError(f"Unknown index type: {index}")
         return cls(
-            expr=expr_enum_to_klass_mapping[dct["expr"]["type"]].from_dict(dct["expr"]),
+            expr=parse_expr(dct["expr"]),
             index=index,
             null_on_oob=dct["null_on_oob"],
         )

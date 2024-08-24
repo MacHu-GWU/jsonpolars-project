@@ -6,7 +6,7 @@ import dataclasses
 import polars as pl
 
 from ..sentinel import NOTHING, REQUIRED, OPTIONAL
-from ..base_expr import ExprEnum, BaseExpr, expr_enum_to_klass_mapping
+from ..base_expr import ExprEnum, BaseExpr, expr_enum_to_klass_mapping, parse_expr
 
 if T.TYPE_CHECKING:  # pragma: no cover
     from .api import T_EXPR
@@ -20,7 +20,7 @@ class String(BaseExpr):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            expr=expr_enum_to_klass_mapping[dct["expr"]["type"]].from_dict(dct["expr"]),
+            expr=parse_expr(dct["expr"]),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -32,7 +32,7 @@ expr_enum_to_klass_mapping[ExprEnum.string.value] = String
 
 @dataclasses.dataclass
 class Split(BaseExpr):
-    type: str = dataclasses.field(default=ExprEnum.split.value)
+    type: str = dataclasses.field(default=ExprEnum.str_split.value)
     expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
     by: str = dataclasses.field(default=REQUIRED)
     inclusive: bool = dataclasses.field(default=False)
@@ -40,7 +40,7 @@ class Split(BaseExpr):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            expr=expr_enum_to_klass_mapping[dct["expr"]["type"]].from_dict(dct["expr"]),
+            expr=parse_expr(dct["expr"]),
             by=dct["by"],
             inclusive=dct["inclusive"],
         )
@@ -49,4 +49,4 @@ class Split(BaseExpr):
         return self.expr.to_polars().split(by=self.by, inclusive=self.inclusive)
 
 
-expr_enum_to_klass_mapping[ExprEnum.split.value] = Split
+expr_enum_to_klass_mapping[ExprEnum.str_split.value] = Split

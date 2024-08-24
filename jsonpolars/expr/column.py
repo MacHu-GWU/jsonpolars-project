@@ -6,7 +6,7 @@ import dataclasses
 import polars as pl
 
 from ..sentinel import NOTHING, REQUIRED, OPTIONAL
-from ..base_expr import ExprEnum, BaseExpr, expr_enum_to_klass_mapping
+from ..base_expr import ExprEnum, BaseExpr, expr_enum_to_klass_mapping, parse_expr
 
 if T.TYPE_CHECKING:  # pragma: no cover
     from .api import T_EXPR
@@ -34,7 +34,7 @@ class Alias(BaseExpr):
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
             name=dct["name"],
-            expr=expr_enum_to_klass_mapping[dct["expr"]["type"]].from_dict(dct["expr"]),
+            expr=parse_expr(dct["expr"]),
         )
 
     def to_polars(self) -> pl.Expr:

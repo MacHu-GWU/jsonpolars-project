@@ -6,7 +6,7 @@ import dataclasses
 import polars as pl
 
 from ..sentinel import NOTHING, REQUIRED, OPTIONAL
-from ..base_expr import ExprEnum, BaseExpr, expr_enum_to_klass_mapping
+from ..base_expr import ExprEnum, BaseExpr, expr_enum_to_klass_mapping, parse_expr
 
 if T.TYPE_CHECKING:  # pragma: no cover
     from .api import T_EXPR
@@ -33,8 +33,8 @@ class Plus(BaseExpr):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            left=expr_enum_to_klass_mapping[dct["left"]["type"]].from_dict(dct["left"]),
-            right=expr_enum_to_klass_mapping[dct["right"]["type"]].from_dict(dct["right"]),
+            left=parse_expr(dct["left"]),
+            right=parse_expr(dct["right"]),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -53,8 +53,8 @@ class Minus(BaseExpr):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            left=expr_enum_to_klass_mapping[dct["left"]["type"]].from_dict(dct["left"]),
-            right=expr_enum_to_klass_mapping[dct["right"]["type"]].from_dict(dct["right"]),
+            left=parse_expr(dct["left"]),
+            right=parse_expr(dct["right"]),
         )
 
     def to_polars(self) -> pl.Expr:

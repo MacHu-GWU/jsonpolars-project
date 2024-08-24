@@ -1,0 +1,2 @@
+# Core dependencies goes here
+polars>=1.2.1,<2.0.0

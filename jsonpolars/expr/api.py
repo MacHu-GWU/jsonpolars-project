@@ -15,6 +15,9 @@ from .manipulation_expr import Cast
 from .string_expr import String
 from .string_expr import Split
 
+from .utils import to_jsonpolars_into_expr
+from .utils import to_polars_into_expr
+
 T_EXPR = T.Union[
     Column,
     Alias,

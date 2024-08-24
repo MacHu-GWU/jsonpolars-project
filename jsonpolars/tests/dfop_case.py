@@ -16,7 +16,7 @@ if T.TYPE_CHECKING:  # pragma: no cover
 class Case:
     input_records: T.List[T.Dict[str, T.Any]] = dataclasses.field()
     dfop: "T_DFOP" = dataclasses.field()
-    output_records: T.List[T.Dict[str, T.Any]] = dataclasses.field()
+    expected_output_records: T.List[T.Dict[str, T.Any]] = dataclasses.field()
 
     def run_test(self):
 
@@ -26,12 +26,12 @@ class Case:
         rprint(self.dfop)
         df = pl.DataFrame(self.input_records)
         df1 = self.dfop.to_polars(df)
-        records = df1.to_dicts()
-        print("---------- records ----------")
-        rprint(records)
+        output_records = df1.to_dicts()
         print("---------- output_records ----------")
-        rprint(self.output_records)
-        assert records == self.output_records
+        rprint(output_records)
+        print("---------- expected_output_records ----------")
+        rprint(self.expected_output_records)
+        assert output_records == self.expected_output_records
 
         dfop_data = self.dfop.to_dict()
         print("---------- dfop_data ----------")
@@ -40,9 +40,9 @@ class Case:
         print("---------- dfop1 ----------")
         rprint(dfop1)
         df1 = self.dfop.to_polars(df)
-        records = df1.to_dicts()
-        print("---------- records ----------")
-        rprint(records)
+        output_records = df1.to_dicts()
         print("---------- output_records ----------")
-        rprint(self.output_records)
-        assert records == self.output_records
+        rprint(output_records)
+        print("---------- expected_output_records ----------")
+        rprint(self.expected_output_records)
+        assert output_records == self.expected_output_records

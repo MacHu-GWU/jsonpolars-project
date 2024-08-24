@@ -61,9 +61,16 @@ class BaseExpr(DataClass):
     def __post_init__(self):
         self._validate()
 
+    def to_polars(self):
+        raise NotImplementedError()
+
 
 expr_enum_to_klass_mapping: T.Dict[str, T.Type["T_EXPR"]] = dict()
 
 
 def parse_expr(dct: T.Dict[str, T.Any]) -> "T_EXPR":
+    """
+    Note: you have to import everything in the :mod:`jsonpolars.expr` module
+    to make this work.
+    """
     return expr_enum_to_klass_mapping[dct["type"]].from_dict(dct)

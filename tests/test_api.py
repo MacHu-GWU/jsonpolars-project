@@ -33,6 +33,6 @@ def test():
 
 
 if __name__ == "__main__":
-    from polars_transform.tests import run_cov_test
+    from jsonpolars.tests import run_cov_test
 
-    run_cov_test(__file__, "polars_transform.api", preview=False)
+    run_cov_test(__file__, "jsonpolars.api", preview=False)

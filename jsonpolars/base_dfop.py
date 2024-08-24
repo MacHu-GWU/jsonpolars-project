@@ -145,4 +145,8 @@ dfop_enum_to_klass_mapping: T.Dict[str, T.Type["T_DFOP"]] = dict()
 
 
 def parse_dfop(dct: T.Dict[str, T.Any]) -> "T_DFOP":
+    """
+    Note: you have to import everything in the :mod:`jsonpolars.dfop` module
+    to make this work.
+    """
     return dfop_enum_to_klass_mapping[dct["type"]].from_dict(dct)

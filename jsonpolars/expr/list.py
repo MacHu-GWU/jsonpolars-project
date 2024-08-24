@@ -23,7 +23,7 @@ class List(BaseExpr):
             expr=expr_enum_to_klass_mapping[dct["expr"]["type"]].from_dict(dct["expr"]),
         )
 
-    def to_polars(self):
+    def to_polars(self) -> pl.Expr:
         return self.expr.to_polars().list
 
 
@@ -52,7 +52,7 @@ class ListGet(BaseExpr):
             null_on_oob=dct["null_on_oob"],
         )
 
-    def to_polars(self):
+    def to_polars(self) -> pl.Expr:
         if isinstance(self.index, int):
             index = self.index
         elif isinstance(self.index, BaseExpr):

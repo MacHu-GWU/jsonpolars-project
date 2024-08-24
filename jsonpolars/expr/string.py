@@ -23,7 +23,7 @@ class String(BaseExpr):
             expr=expr_enum_to_klass_mapping[dct["expr"]["type"]].from_dict(dct["expr"]),
         )
 
-    def to_polars(self):
+    def to_polars(self) -> pl.Expr:
         return self.expr.to_polars().str
 
 
@@ -45,7 +45,7 @@ class Split(BaseExpr):
             inclusive=dct["inclusive"],
         )
 
-    def to_polars(self):
+    def to_polars(self) -> pl.Expr:
         return self.expr.to_polars().split(by=self.by, inclusive=self.inclusive)
 
 

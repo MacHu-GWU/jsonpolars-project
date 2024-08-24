@@ -2,18 +2,18 @@
 
 import typing as T
 
-from .column_expr import Column
-from .column_expr import Alias
-from .dt_expr import Datetime
-from .dt_expr import DatetimeToString
-from .function_expr import Lit
-from .function_expr import Plus
-from .function_expr import Minus
-from .list_expr import List
-from .list_expr import ListGet
-from .manipulation_expr import Cast
-from .string_expr import String
-from .string_expr import Split
+from .column import Column
+from .column import Alias
+from .dt import Datetime
+from .dt import DatetimeToString
+from .function import Lit
+from .function import Plus
+from .function import Minus
+from .list import List
+from .list import ListGet
+from .manipulation import Cast
+from .string import String
+from .string import Split
 
 from .utils import to_jsonpolars_into_expr
 from .utils import to_polars_into_expr

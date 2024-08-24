@@ -8,6 +8,8 @@ omit =
     jsonpolars/_version.py
     jsonpolars/cli.py
     jsonpolars/paths.py
+    jsonpolars/sentinel.py
+    jsonpolars/typehint.py
 
 [report]
 # Regexes for lines to exclude from consideration

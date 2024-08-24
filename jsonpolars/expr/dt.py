@@ -23,7 +23,7 @@ class Datetime(BaseExpr):
             expr=expr_enum_to_klass_mapping[dct["expr"]["type"]].from_dict(dct["expr"]),
         )
 
-    def to_polars(self):
+    def to_polars(self) -> pl.Expr:
         return self.expr.to_polars().dt
 
 
@@ -43,7 +43,7 @@ class DatetimeToString(BaseExpr):
             format=dct["format"],
         )
 
-    def to_polars(self):
+    def to_polars(self) -> pl.Expr:
         return self.expr.to_polars().to_string(format=self.format)
 
 

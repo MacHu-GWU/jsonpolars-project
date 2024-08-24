@@ -17,7 +17,7 @@ class Column(BaseExpr):
     type: str = dataclasses.field(default=ExprEnum.column.value)
     name: str = dataclasses.field(default=REQUIRED)
 
-    def to_polars(self):
+    def to_polars(self) -> pl.Expr:
         return pl.col(self.name)
 
 
@@ -37,7 +37,7 @@ class Alias(BaseExpr):
             expr=expr_enum_to_klass_mapping[dct["expr"]["type"]].from_dict(dct["expr"]),
         )
 
-    def to_polars(self):
+    def to_polars(self) -> pl.Expr:
         return self.expr.to_polars().alias(self.name)
 
 

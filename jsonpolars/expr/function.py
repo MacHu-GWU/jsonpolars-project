@@ -17,7 +17,7 @@ class Lit(BaseExpr):
     type: str = dataclasses.field(default=ExprEnum.lit.value)
     value: T.Any = dataclasses.field(default=REQUIRED)
 
-    def to_polars(self):
+    def to_polars(self) -> pl.Expr:
         return pl.lit(self.value)
 
 
@@ -37,7 +37,7 @@ class Plus(BaseExpr):
             right=expr_enum_to_klass_mapping[dct["right"]["type"]].from_dict(dct["right"]),
         )
 
-    def to_polars(self):
+    def to_polars(self) -> pl.Expr:
         return self.left.to_polars() + self.right.to_polars()
 
 
@@ -57,7 +57,7 @@ class Minus(BaseExpr):
             right=expr_enum_to_klass_mapping[dct["right"]["type"]].from_dict(dct["right"]),
         )
 
-    def to_polars(self):
+    def to_polars(self) -> pl.Expr:
         return self.left.to_polars() - self.right.to_polars()
 
 

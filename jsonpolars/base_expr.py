@@ -4,6 +4,7 @@ import typing as T
 import enum
 import dataclasses
 
+import polars as pl
 from .vendor.better_dataclasses import DataClass
 
 from .sentinel import NOTHING, REQUIRED, OPTIONAL
@@ -61,7 +62,7 @@ class BaseExpr(DataClass):
     def __post_init__(self):
         self._validate()
 
-    def to_polars(self):
+    def to_polars(self) -> pl.Expr:
         raise NotImplementedError()
 
 

@@ -25,7 +25,7 @@ class Cast(BaseExpr):
             dtype=dct["dtype"],
         )
 
-    def to_polars(self):
+    def to_polars(self) -> pl.Expr:
         return self.expr.to_polars().cast(self.dtype)
 
 

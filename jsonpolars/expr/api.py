@@ -24,12 +24,12 @@ from .dt import DtTotalMilliSeconds
 from .dt import DtTotalMicroSeconds
 from .dt import DtTotalNanoSeconds
 from .dt import DtTruncate
+from .operator import Plus
+from .operator import Minus
 from .string import String
 from .string import Split
 from .string import StrJoin
 from .function import Lit
-from .function import Plus
-from .function import Minus
 from .column import Column
 from .column import Alias
 
@@ -57,12 +57,12 @@ T_EXPR = T.Union[
     DtTotalMicroSeconds,
     DtTotalNanoSeconds,
     DtTruncate,
+    Plus,
+    Minus,
     String,
     Split,
     StrJoin,
     Lit,
-    Plus,
-    Minus,
     Column,
     Alias,
 ]

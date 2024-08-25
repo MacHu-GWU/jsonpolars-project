@@ -14,7 +14,7 @@ case_split_1 = Case(
         expr=expr.Column(name="id"),
         by="-",
     ),
-    output_records=[
+    expected_output_records=[
         {"id": ["a", "1"]},
     ],
 )
@@ -27,7 +27,7 @@ case_split_2 = Case(
         expr=expr.String(expr=expr.Column(name="id")),
         by="-",
     ),
-    output_records=[
+    expected_output_records=[
         {"id": ["a", "1"]},
     ],
 )
@@ -42,7 +42,7 @@ case_join = Case(
         delimiter="-",
         expr=expr.Column(name="foo"),
     ),
-    output_records=[
+    expected_output_records=[
         {"foo": "1-2-3"},
         {"foo": "1-2-3"},
         {"foo": "1-2-3"},

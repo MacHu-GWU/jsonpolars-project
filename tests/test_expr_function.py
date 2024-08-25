@@ -14,7 +14,7 @@ case_plus_1 = Case(
         left=expr.Column(name="id"),
         right=expr.Lit(value=100),
     ),
-    output_records=[
+    expected_output_records=[
         {"id": 101},
     ],
 )
@@ -26,7 +26,7 @@ case_plus_2 = Case(
         left=expr.Column(name="id"),
         right=100,
     ),
-    output_records=[
+    expected_output_records=[
         {"id": 101},
     ],
 )
@@ -38,7 +38,7 @@ case_minus_1 = Case(
         left=expr.Column(name="id"),
         right=expr.Lit(value=100),
     ),
-    output_records=[
+    expected_output_records=[
         {"id": -99},
     ],
 )
@@ -50,7 +50,7 @@ case_minus_2 = Case(
         left=expr.Column(name="id"),
         right=100,
     ),
-    output_records=[
+    expected_output_records=[
         {"id": -99},
     ],
 )

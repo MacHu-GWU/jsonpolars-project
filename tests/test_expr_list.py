@@ -15,7 +15,7 @@ case_list_get_1 = Case(
         index=0,
         # index=expr.Lit(value=1),
     ),
-    output_records=[
+    expected_output_records=[
         {"lst": 1},
     ],
 )
@@ -28,7 +28,7 @@ case_list_get_2 = Case(
         expr=expr.List(expr=expr.Column(name="lst")),
         index=expr.Lit(value=1),
     ),
-    output_records=[
+    expected_output_records=[
         {"lst": 2},
     ],
 )

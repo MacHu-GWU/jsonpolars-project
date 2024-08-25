@@ -11,7 +11,7 @@ case_alias = Case(
         name="b",
         expr=expr.Column(name="a"),
     ),
-    output_records=[
+    expected_output_records=[
         {"a": 1, "b": 1},
     ],
 )

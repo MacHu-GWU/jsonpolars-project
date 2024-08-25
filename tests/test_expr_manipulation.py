@@ -15,7 +15,7 @@ case_cast = Case(
         dtype=pl.Datetime(),
         expr=expr.Column(name="time"),
     ),
-    output_records=[
+    expected_output_records=[
         {"time": datetime(2024, 8, 1, 12, 30, 45)},
     ],
 )

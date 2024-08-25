@@ -16,7 +16,7 @@ if T.TYPE_CHECKING:  # pragma: no cover
 class Case:
     input_records: T.List[T.Dict[str, T.Any]] = dataclasses.field()
     expr: "T_EXPR" = dataclasses.field()
-    output_records: T.List[T.Dict[str, T.Any]] = dataclasses.field()
+    expected_output_records: T.List[T.Dict[str, T.Any]] = dataclasses.field()
 
     def run_with_columns_test(self):
 
@@ -27,11 +27,11 @@ class Case:
         df = pl.DataFrame(self.input_records)
         df1 = df.with_columns(self.expr.to_polars())
         records = df1.to_dicts()
-        print("---------- records ----------")
-        rprint(records)
         print("---------- output_records ----------")
-        rprint(self.output_records)
-        assert records == self.output_records
+        rprint(records)
+        print("---------- expected_output_records ----------")
+        rprint(self.expected_output_records)
+        assert records == self.expected_output_records
 
         expr_data = self.expr.to_dict()
         print("---------- expr_data ----------")
@@ -41,8 +41,8 @@ class Case:
         rprint(expr1)
         df1 = df.with_columns(expr1.to_polars())
         records = df1.to_dicts()
-        print("---------- records ----------")
-        rprint(records)
         print("---------- output_records ----------")
-        rprint(self.output_records)
-        assert records == self.output_records
+        rprint(records)
+        print("---------- expected_output_records ----------")
+        rprint(self.expected_output_records)
+        assert records == self.expected_output_records

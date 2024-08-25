@@ -7,6 +7,7 @@ import polars as pl
 
 from ..sentinel import NOTHING, REQUIRED, OPTIONAL
 from ..expr import api as expr
+from .. import utils_expr
 from ..base_dfop import DfopEnum, BaseDfop, dfop_enum_to_klass_mapping
 
 if T.TYPE_CHECKING:  # pragma: no cover
@@ -19,9 +20,9 @@ def _extract_exprs_named_exprs(exprs, named_exprs):
     """
     Used in Select.from_dict and WithColumns.from_dict.
     """
-    new_exprs = [expr.to_jsonpolars_into_expr(expr_like) for expr_like in exprs]
+    new_exprs = [utils_expr.to_jsonpolars_into_expr(expr_like) for expr_like in exprs]
     new_named_exprs = {
-        name: expr.to_jsonpolars_into_expr(expr_like)
+        name: utils_expr.to_jsonpolars_into_expr(expr_like)
         for name, expr_like in named_exprs.items()
     }
     return new_exprs, new_named_exprs
@@ -31,9 +32,9 @@ def _convert_to_exprs_named_exprs(exprs, named_exprs):
     """
     Used in Select.to_polars and WithColumns.to_polars.
     """
-    new_exprs = [expr.to_polars_into_expr(expr_like) for expr_like in exprs]
+    new_exprs = [utils_expr.to_polars_into_expr(expr_like) for expr_like in exprs]
     new_named_exprs = {
-        name: expr.to_polars_into_expr(expr_like)
+        name: utils_expr.to_polars_into_expr(expr_like)
         for name, expr_like in named_exprs.items()
     }
     return new_exprs, new_named_exprs
@@ -191,7 +192,9 @@ class Sort(BaseDfop):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            by=[expr.to_jsonpolars_into_expr(expr_like) for expr_like in dct["by"]],
+            by=[
+                utils_expr.to_jsonpolars_into_expr(expr_like) for expr_like in dct["by"]
+            ],
             descending=dct["descending"],
             nulls_last=dct["nulls_last"],
             multithreaded=dct["multithreaded"],
@@ -200,7 +203,7 @@ class Sort(BaseDfop):
 
     def to_polars(self, df: pl.DataFrame) -> pl.DataFrame:
         return df.sort(
-            *[expr.to_polars_into_expr(expr_like) for expr_like in self.by],
+            *[utils_expr.to_polars_into_expr(expr_like) for expr_like in self.by],
             descending=self.descending,
             nulls_last=self.nulls_last,
             multithreaded=self.multithreaded,

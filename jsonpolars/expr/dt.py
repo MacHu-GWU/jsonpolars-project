@@ -12,6 +12,13 @@ if T.TYPE_CHECKING:  # pragma: no cover
     from .api import T_EXPR
 
 
+def ensure_datetime(expr: "T_EXPR") -> pl.Expr:
+    if isinstance(expr, Datetime):
+        return expr.to_polars()
+    else:
+        return expr.to_polars().dt
+
+
 @dataclasses.dataclass
 class Datetime(BaseExpr):
     type: str = dataclasses.field(default=ExprEnum.dt.value)
@@ -22,7 +29,7 @@ class Datetime(BaseExpr):
         return cls(expr=parse_expr(dct["expr"]))
 
     def to_polars(self) -> pl.Expr:
-        return self.expr.to_polars().dt
+        return ensure_datetime(self.expr)
 
 
 expr_enum_to_klass_mapping[ExprEnum.dt.value] = Datetime
@@ -37,31 +44,12 @@ class DatetimeToString(BaseExpr):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            expr=expr_enum_to_klass_mapping[dct["expr"]["type"]].from_dict(dct["expr"]),
+            expr=parse_expr(dct["expr"]),
             format=dct["format"],
         )
 
     def to_polars(self) -> pl.Expr:
-        return self.expr.to_polars().to_string(format=self.format)
+        return ensure_datetime(self.expr).to_string(format=self.format)
 
 
 expr_enum_to_klass_mapping[ExprEnum.dt_to_string.value] = DatetimeToString
-
-
-# @dataclasses.dataclass
-# class DatetimeYear(BaseExpr):
-#     type: str = dataclasses.field(default=ExprEnum.dt_year.value)
-#     expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-#
-#     @classmethod
-#     def from_dict(cls, dct: T.Dict[str, T.Any]):
-#         return cls(
-#             expr=parse_expr(dct["expr"]),
-#         )
-#
-#     def to_polars(self) -> pl.Expr:
-#         expr = self.expr.to_polars()
-#         return self.expr.to_polars().month()
-#
-#
-# expr_enum_to_klass_mapping[ExprEnum.dt_year.value] = DatetimeYear

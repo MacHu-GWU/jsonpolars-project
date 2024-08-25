@@ -13,23 +13,30 @@ def test():
     _ = api.dfop
 
     # --- expr ---
-    _ = api.expr.Column
-    _ = api.expr.Alias
+    _ = api.expr.Cast
+    _ = api.expr.List
+    _ = api.expr.ListGet
     _ = api.expr.Datetime
     _ = api.expr.DatetimeToString
+    _ = api.expr.String
+    _ = api.expr.Split
+    _ = api.expr.StrJoin
     _ = api.expr.Lit
     _ = api.expr.Plus
     _ = api.expr.Minus
-    _ = api.expr.List
-    _ = api.expr.ListGet
-    _ = api.expr.Cast
-    _ = api.expr.String
-    _ = api.expr.Split
+    _ = api.expr.Column
+    _ = api.expr.Alias
 
     # --- dfop ---
     _ = api.dfop.Select
     _ = api.dfop.Rename
     _ = api.dfop.Drop
+    _ = api.dfop.WithColumns
+    _ = api.dfop.Head
+    _ = api.dfop.Tail
+    _ = api.dfop.Sort
+    _ = api.dfop.DropNulls
+    _ = api.dfop.Count
 
 
 if __name__ == "__main__":

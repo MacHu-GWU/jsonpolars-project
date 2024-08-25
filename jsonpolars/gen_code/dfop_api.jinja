@@ -6,7 +6,7 @@ import typing as T
 from .{{ klass.module_name }} import {{ klass.class_name }}
 {%- endfor %}
 
-T_EXPR = T.Union[
+T_DFOP = T.Union[
     {%- for klass in klass_list %}
     {{ klass.class_name }},
     {%- endfor %}

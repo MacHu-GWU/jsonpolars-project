@@ -15,9 +15,6 @@ from .function import Minus
 from .column import Column
 from .column import Alias
 
-from .utils import to_jsonpolars_into_expr
-from .utils import to_polars_into_expr
-
 T_EXPR = T.Union[
     Cast,
     List,

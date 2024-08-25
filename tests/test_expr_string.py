@@ -1,20 +1,35 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
-
 import polars as pl
 
 from jsonpolars.expr import api as expr
 from jsonpolars.tests.expr_case import Case
 
 
-case_split = Case(
-    input_records=[{"id": "a-1"}],
+case_split_1 = Case(
+    input_records=[
+        {"id": "a-1"},
+    ],
     expr=expr.Split(
         expr=expr.Column(name="id"),
         by="-",
     ),
-    output_records=[{"id": ["a", "1"]}],
+    output_records=[
+        {"id": ["a", "1"]},
+    ],
+)
+
+case_split_2 = Case(
+    input_records=[
+        {"id": "a-1"},
+    ],
+    expr=expr.Split(
+        expr=expr.String(expr=expr.Column(name="id")),
+        by="-",
+    ),
+    output_records=[
+        {"id": ["a", "1"]},
+    ],
 )
 
 case_join = Case(
@@ -38,7 +53,8 @@ case_join = Case(
 def test():
     print("")
 
-    case_split.run_with_columns_test()
+    case_split_1.run_with_columns_test()
+    case_split_2.run_with_columns_test()
     case_join.run_with_columns_test()
 
 

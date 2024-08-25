@@ -2,7 +2,7 @@
 
 import polars as pl
 from jsonpolars.expr import api as expr
-from jsonpolars.expr.utils import (
+from jsonpolars.utils_expr import (
     to_jsonpolars_into_expr,
     to_polars_into_expr,
 )

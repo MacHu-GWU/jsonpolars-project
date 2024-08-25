@@ -12,6 +12,13 @@ if T.TYPE_CHECKING:  # pragma: no cover
     from .api import T_EXPR
 
 
+def ensure_list(expr: "T_EXPR") -> pl.Expr:
+    if isinstance(expr, List):
+        return expr.to_polars()
+    else:
+        return expr.to_polars().list
+
+
 @dataclasses.dataclass
 class List(BaseExpr):
     type: str = dataclasses.field(default=ExprEnum.list.value)
@@ -24,7 +31,7 @@ class List(BaseExpr):
         )
 
     def to_polars(self) -> pl.Expr:
-        return self.expr.to_polars().list
+        return ensure_list(self.expr)
 
 
 expr_enum_to_klass_mapping[ExprEnum.list.value] = List
@@ -53,12 +60,12 @@ class ListGet(BaseExpr):
         )
 
     def to_polars(self) -> pl.Expr:
+        expr = ensure_list(self.expr)
         if isinstance(self.index, int):
             index = self.index
         elif isinstance(self.index, BaseExpr):
             index = self.index.to_polars()
-
-        return self.expr.to_polars().get(index=index, null_on_oob=self.null_on_oob)
+        return expr.get(index=index, null_on_oob=self.null_on_oob)
 
 
 expr_enum_to_klass_mapping[ExprEnum.list_get.value] = ListGet

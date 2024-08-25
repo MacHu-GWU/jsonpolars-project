@@ -5,11 +5,13 @@ omit =
     jsonpolars/docs/*
     jsonpolars/tests/*
     jsonpolars/vendor/*
+    jsonpolars/gen_code/*
     jsonpolars/_version.py
     jsonpolars/cli.py
     jsonpolars/paths.py
     jsonpolars/sentinel.py
     jsonpolars/typehint.py
+    jsonpolars/utils_dfop.py
 
 [report]
 # Regexes for lines to exclude from consideration

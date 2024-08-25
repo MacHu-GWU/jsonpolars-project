@@ -3,12 +3,12 @@
 import typing as T
 import polars as pl
 
-from ..base_expr import BaseExpr, parse_expr
-from ..typehint import IntoExpr
+from .base_expr import BaseExpr, parse_expr
+from .typehint import IntoExpr
 
 
 if T.TYPE_CHECKING:  # pragma: no cover
-    from .api import T_EXPR
+    from .expr.api import T_EXPR
 
 
 def to_jsonpolars_into_expr(expr_like: T.Union[str, dict, "T_EXPR"]) -> IntoExpr:

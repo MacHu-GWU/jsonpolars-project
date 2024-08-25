@@ -29,6 +29,8 @@ PythonLiteral: T.TypeAlias = T.Union[NonNestedLiteral, T.List[T.Any]]
 IntoExprColumn: T.TypeAlias = T.Union["T_EXPR", str]
 # Inputs that can convert into an expression
 IntoExpr: T.TypeAlias = T.Union[PythonLiteral, "T_EXPR", None]
+# Inputs that can be interactive with +, -, *, /, etc.
+OtherExpr: T.TypeAlias = T.Union[PythonLiteral, "T_EXPR"]
 
 # selector type, and related collection/sequence
 ColumnNameOrSelector: T.TypeAlias = T.Union[str, "T_EXPR"]

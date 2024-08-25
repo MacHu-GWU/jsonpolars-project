@@ -5,8 +5,10 @@ from jsonpolars.dfop import api as dfop
 from jsonpolars.tests.dfop_case import Case
 
 
-case1 = Case(
-    input_records=[{"a": 1, "b": 2, "c": 3}],
+case_select = Case(
+    input_records=[
+        {"a": 1, "b": 2, "c": 3},
+    ],
     dfop=dfop.Select(
         exprs=[
             "a",
@@ -17,25 +19,37 @@ case1 = Case(
             "e": expr.Lit(value=5),
         },
     ),
-    expected_output_records=[{"a": 1, "c": 3, "d": 2, "e": 5}],
+    expected_output_records=[
+        {"a": 1, "c": 3, "d": 2, "e": 5},
+    ],
 )
-case2 = Case(
-    input_records=[{"a": 1, "b": 2, "c": 3}],
+case_rename = Case(
+    input_records=[
+        {"a": 1, "b": 2, "c": 3},
+    ],
     dfop=dfop.Rename(
         mapping={
             "a": "x",
             "c": "z",
         }
     ),
-    expected_output_records=[{"x": 1, "b": 2, "z": 3}],
+    expected_output_records=[
+        {"x": 1, "b": 2, "z": 3},
+    ],
 )
-case3 = Case(
-    input_records=[{"a": 1, "b": 2, "c": 3}],
+case_drop = Case(
+    input_records=[
+        {"a": 1, "b": 2, "c": 3},
+    ],
     dfop=dfop.Drop(columns=["a", expr.Column(name="c")]),
-    expected_output_records=[{"b": 2}],
+    expected_output_records=[
+        {"b": 2},
+    ],
 )
-case4 = Case(
-    input_records=[{"a": 1}],
+case_with_columns = Case(
+    input_records=[
+        {"a": 1},
+    ],
     dfop=dfop.WithColumns(
         exprs=[
             expr.Alias(
@@ -53,29 +67,61 @@ case4 = Case(
             )
         },
     ),
-    expected_output_records=[{"a": 1, "b": 2, "c": 3}],
+    expected_output_records=[
+        {"a": 1, "b": 2, "c": 3},
+    ],
 )
-case5 = Case(
-    input_records=[{"id": 1}, {"id": 2}, {"id": 3}, {"id": 4}],
+case_head = Case(
+    input_records=[
+        {"id": 1},
+        {"id": 2},
+        {"id": 3},
+        {"id": 4},
+    ],
     dfop=dfop.Head(n=2),
-    expected_output_records=[{"id": 1}, {"id": 2}],
+    expected_output_records=[
+        {"id": 1},
+        {"id": 2},
+    ],
 )
-case6 = Case(
-    input_records=[{"id": 1}, {"id": 2}, {"id": 3}, {"id": 4}],
+case_tail = Case(
+    input_records=[
+        {"id": 1},
+        {"id": 2},
+        {"id": 3},
+        {"id": 4},
+    ],
     dfop=dfop.Tail(n=2),
-    expected_output_records=[{"id": 3}, {"id": 4}],
+    expected_output_records=[
+        {"id": 3},
+        {"id": 4},
+    ],
 )
-case7 = Case(
-    input_records=[{"id": 1}, {"id": 2}, {"id": 3}],
+case_count = Case(
+    input_records=[
+        {"id": 1},
+        {"id": 2},
+        {"id": 3},
+    ],
     dfop=dfop.Count(),
-    expected_output_records=[{"id": 3}],
+    expected_output_records=[
+        {"id": 3},
+    ],
 )
-case8 = Case(
-    input_records=[{"id": 2}, {"id": 3}, {"id": 1}],
+case_sort_1 = Case(
+    input_records=[
+        {"id": 2},
+        {"id": 3},
+        {"id": 1},
+    ],
     dfop=dfop.Sort(by=["id"]),
-    expected_output_records=[{"id": 1}, {"id": 2}, {"id": 3}],
+    expected_output_records=[
+        {"id": 1},
+        {"id": 2},
+        {"id": 3},
+    ],
 )
-case9 = Case(
+case_sort_2 = Case(
     input_records=[
         {"id": 1, "name": "a"},
         {"id": 1, "name": "b"},
@@ -90,7 +136,7 @@ case9 = Case(
         {"id": 1, "name": "b"},
     ],
 )
-case10 = Case(
+case_drop_nulls_1 = Case(
     input_records=[
         {"id": 1, "name": "a"},
         {"id": 2, "name": None},
@@ -101,7 +147,7 @@ case10 = Case(
         {"id": 1, "name": "a"},
     ],
 )
-case11 = Case(
+case_drop_nulls_2 = Case(
     input_records=[
         {"id": 1, "name": "a"},
         {"id": 2, "name": None},
@@ -113,7 +159,7 @@ case11 = Case(
         {"id": 2, "name": None},
     ],
 )
-case12 = Case(
+case_drop_nulls_3 = Case(
     input_records=[
         {"id": 1, "name": "a"},
         {"id": 2, "name": None},
@@ -130,21 +176,21 @@ case12 = Case(
 def test():
     print("")
 
-    case1.run_test()
-    case2.run_test()
-    case3.run_test()
-    case4.run_test()
-    case5.run_test()
-    case6.run_test()
-    case7.run_test()
-    case8.run_test()
-    case9.run_test()
-    case10.run_test()
-    case11.run_test()
-    case12.run_test()
+    case_select.run_test()
+    case_rename.run_test()
+    case_drop.run_test()
+    case_with_columns.run_test()
+    case_head.run_test()
+    case_tail.run_test()
+    case_count.run_test()
+    case_sort_1.run_test()
+    case_sort_2.run_test()
+    case_drop_nulls_1.run_test()
+    case_drop_nulls_2.run_test()
+    case_drop_nulls_3.run_test()
 
 
 if __name__ == "__main__":
     from jsonpolars.tests import run_cov_test
 
-    run_cov_test(__file__, "jsonpolars.dfop", preview=False)
+    run_cov_test(__file__, "jsonpolars.dfop.manipulation", preview=False)

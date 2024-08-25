@@ -12,6 +12,13 @@ if T.TYPE_CHECKING:  # pragma: no cover
     from .api import T_EXPR
 
 
+def ensure_string(expr: "T_EXPR") -> pl.Expr:
+    if isinstance(expr, String):
+        return expr.to_polars()
+    else:
+        return expr.to_polars().str
+
+
 @dataclasses.dataclass
 class String(BaseExpr):
     type: str = dataclasses.field(default=ExprEnum.string.value)
@@ -24,7 +31,7 @@ class String(BaseExpr):
         )
 
     def to_polars(self) -> pl.Expr:
-        return self.expr.to_polars().str
+        return ensure_string(self.expr)
 
 
 expr_enum_to_klass_mapping[ExprEnum.string.value] = String
@@ -46,10 +53,7 @@ class Split(BaseExpr):
         )
 
     def to_polars(self) -> pl.Expr:
-        if isinstance(self.expr, String):
-            expr = self.expr.to_polars()
-        else:
-            expr = self.expr.to_polars().str
+        expr = ensure_string(self.expr)
         return expr.split(by=self.by, inclusive=self.inclusive)
 
 

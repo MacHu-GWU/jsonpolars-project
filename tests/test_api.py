@@ -17,7 +17,8 @@ def test():
     _ = api.expr.List
     _ = api.expr.ListGet
     _ = api.expr.Datetime
-    _ = api.expr.DatetimeToString
+    _ = api.expr.DtToString
+    _ = api.expr.DtYear
     _ = api.expr.String
     _ = api.expr.Split
     _ = api.expr.StrJoin

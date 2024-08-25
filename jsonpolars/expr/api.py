@@ -5,7 +5,8 @@ from .manipulation import Cast
 from .list import List
 from .list import ListGet
 from .dt import Datetime
-from .dt import DatetimeToString
+from .dt import DtToString
+from .dt import DtYear
 from .string import String
 from .string import Split
 from .string import StrJoin
@@ -20,7 +21,8 @@ T_EXPR = T.Union[
     List,
     ListGet,
     Datetime,
-    DatetimeToString,
+    DtToString,
+    DtYear,
     String,
     Split,
     StrJoin,

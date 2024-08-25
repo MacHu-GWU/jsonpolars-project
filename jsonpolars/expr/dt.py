@@ -36,7 +36,7 @@ expr_enum_to_klass_mapping[ExprEnum.dt.value] = Datetime
 
 
 @dataclasses.dataclass
-class DatetimeToString(BaseExpr):
+class DtToString(BaseExpr):
     type: str = dataclasses.field(default=ExprEnum.dt_to_string.value)
     expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
     format: str = dataclasses.field(default=REQUIRED)
@@ -52,4 +52,20 @@ class DatetimeToString(BaseExpr):
         return ensure_datetime(self.expr).to_string(format=self.format)
 
 
-expr_enum_to_klass_mapping[ExprEnum.dt_to_string.value] = DatetimeToString
+expr_enum_to_klass_mapping[ExprEnum.dt_to_string.value] = DtToString
+
+
+@dataclasses.dataclass
+class DtYear(BaseExpr):
+    type: str = dataclasses.field(default=ExprEnum.dt_year.value)
+    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+
+    @classmethod
+    def from_dict(cls, dct: T.Dict[str, T.Any]):
+        return cls(expr=parse_expr(dct["expr"]))
+
+    def to_polars(self) -> pl.Expr:
+        return ensure_datetime(self.expr).year()
+
+
+expr_enum_to_klass_mapping[ExprEnum.dt_year.value] = DtYear

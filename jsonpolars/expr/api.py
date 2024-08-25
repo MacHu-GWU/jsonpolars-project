@@ -26,6 +26,19 @@ from .dt import DtTotalNanoSeconds
 from .dt import DtTruncate
 from .operator import Plus
 from .operator import Minus
+from .operator import Multiply
+from .operator import TrueDiv
+from .operator import FloorDiv
+from .operator import Negative
+from .operator import Pow
+from .operator import Equal
+from .operator import NotEqual
+from .operator import GreatThan
+from .operator import GreatThanOrEqual
+from .operator import LessThan
+from .operator import LessThanOrEqual
+from .operator import LogicalAnd
+from .operator import LogicalOr
 from .string import String
 from .string import Split
 from .string import StrJoin
@@ -59,6 +72,19 @@ T_EXPR = T.Union[
     DtTruncate,
     Plus,
     Minus,
+    Multiply,
+    TrueDiv,
+    FloorDiv,
+    Negative,
+    Pow,
+    Equal,
+    NotEqual,
+    GreatThan,
+    GreatThanOrEqual,
+    LessThan,
+    LessThanOrEqual,
+    LogicalAnd,
+    LogicalOr,
     String,
     Split,
     StrJoin,

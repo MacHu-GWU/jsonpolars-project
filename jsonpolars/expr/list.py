@@ -21,6 +21,9 @@ def ensure_list(expr: "T_EXPR") -> pl.Expr:
 
 @dataclasses.dataclass
 class List(BaseExpr):
+    """
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/list.html
+    """
     type: str = dataclasses.field(default=ExprEnum.list.value)
     expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
 
@@ -39,6 +42,9 @@ expr_enum_to_klass_mapping[ExprEnum.list.value] = List
 
 @dataclasses.dataclass
 class ListGet(BaseExpr):
+    """
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.list.get.html#polars.Expr.list.get
+    """
     type: str = dataclasses.field(default=ExprEnum.list_get.value)
     expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
     index: T.Union[int, "T_EXPR"] = dataclasses.field(default=REQUIRED)

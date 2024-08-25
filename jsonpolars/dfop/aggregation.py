@@ -18,7 +18,7 @@ if T.TYPE_CHECKING:  # pragma: no cover
 @dataclasses.dataclass
 class Count(BaseDfop):
     """
-    https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.count.html
+    Ref: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.count.html
     """
 
     type: str = dataclasses.field(default=DfopEnum.count.value)

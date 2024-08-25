@@ -14,6 +14,9 @@ if T.TYPE_CHECKING:  # pragma: no cover
 
 @dataclasses.dataclass
 class Column(BaseExpr):
+    """
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/col.html
+    """
     type: str = dataclasses.field(default=ExprEnum.column.value)
     name: str = dataclasses.field(default=REQUIRED)
 
@@ -26,6 +29,9 @@ expr_enum_to_klass_mapping[ExprEnum.column.value] = Column
 
 @dataclasses.dataclass
 class Alias(BaseExpr):
+    """
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.alias.html
+    """
     type: str = dataclasses.field(default=ExprEnum.alias.value)
     name: str = dataclasses.field(default=REQUIRED)
     expr: "T_EXPR" = dataclasses.field(default=REQUIRED)

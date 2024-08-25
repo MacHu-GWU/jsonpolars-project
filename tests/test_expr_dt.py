@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 import polars as pl
 
@@ -41,6 +41,17 @@ case_dt_year = Case(
     ),
     expected_output_records=[
         {"dt": 2021},
+    ],
+)
+case_dt_quarter = Case(
+    input_records=[
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
+    ],
+    expr=expr.DtQuarter(
+        expr=expr.Column(name="dt"),
+    ),
+    expected_output_records=[
+        {"dt": 2},
     ],
 )
 case_dt_month = Case(
@@ -114,6 +125,17 @@ case_dt_epoch = Case(
         {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
     ],
     expr=expr.DtEpoch(
+        expr=expr.Column(name="dt"),
+    ),
+    expected_output_records=[
+        {"dt": 1623767445123000},
+    ],
+)
+case_dt_timestamp = Case(
+    input_records=[
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
+    ],
+    expr=expr.DtTimestamp(
         expr=expr.Column(name="dt"),
     ),
     expected_output_records=[
@@ -218,6 +240,30 @@ case_dt_total_nanoseconds = Case(
         {"dt": 1623767445123000000},
     ],
 )
+case_dt_truncate_1 = Case(
+    input_records=[
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
+    ],
+    expr=expr.DtTruncate(
+        expr=expr.Column(name="dt"),
+        every="1h",
+    ),
+    expected_output_records=[
+        {"dt": datetime(2021, 6, 15, 14, 0, 0, 0, tzinfo=timezone.utc)},
+    ],
+)
+case_dt_truncate_2 = Case(
+    input_records=[
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
+    ],
+    expr=expr.DtTruncate(
+        expr=expr.Column(name="dt"),
+        every=timedelta(hours=1),
+    ),
+    expected_output_records=[
+        {"dt": datetime(2021, 6, 15, 14, 0, 0, 0, tzinfo=timezone.utc)},
+    ],
+)
 # fmt: on
 
 
@@ -227,6 +273,7 @@ def test():
     case_datetime_to_string_1.run_with_columns_test()
     case_datetime_to_string_2.run_with_columns_test()
     case_dt_year.run_with_columns_test()
+    case_dt_quarter.run_with_columns_test()
     case_dt_month.run_with_columns_test()
     case_dt_day.run_with_columns_test()
     case_dt_hour.run_with_columns_test()
@@ -234,6 +281,7 @@ def test():
     case_dt_second.run_with_columns_test()
     case_dt_nanosecond.run_with_columns_test()
     case_dt_epoch.run_with_columns_test()
+    case_dt_timestamp.run_with_columns_test()
     case_dt_total_days.run_with_columns_test()
     case_dt_total_hours.run_with_columns_test()
     case_dt_total_minutes.run_with_columns_test()
@@ -241,6 +289,8 @@ def test():
     case_dt_total_milliseconds.run_with_columns_test()
     case_dt_total_microseconds.run_with_columns_test()
     case_dt_total_nanoseconds.run_with_columns_test()
+    case_dt_truncate_1.run_with_columns_test()
+    case_dt_truncate_2.run_with_columns_test()
 
 
 if __name__ == "__main__":

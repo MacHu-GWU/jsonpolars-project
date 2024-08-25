@@ -21,6 +21,10 @@ def ensure_string(expr: "T_EXPR") -> pl.Expr:
 
 @dataclasses.dataclass
 class String(BaseExpr):
+    """
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/string.html
+    """
+
     type: str = dataclasses.field(default=ExprEnum.string.value)
     expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
 
@@ -39,6 +43,10 @@ expr_enum_to_klass_mapping[ExprEnum.string.value] = String
 
 @dataclasses.dataclass
 class Split(BaseExpr):
+    """
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.split.html
+    """
+
     type: str = dataclasses.field(default=ExprEnum.str_split.value)
     expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
     by: str = dataclasses.field(default=REQUIRED)
@@ -62,6 +70,10 @@ expr_enum_to_klass_mapping[ExprEnum.str_split.value] = Split
 
 @dataclasses.dataclass
 class StrJoin(BaseExpr):
+    """
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.join.html
+    """
+
     type: str = dataclasses.field(default=ExprEnum.str_join.value)
     expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
     delimiter: str = dataclasses.field(default="")

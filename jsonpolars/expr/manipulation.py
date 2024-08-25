@@ -14,6 +14,9 @@ if T.TYPE_CHECKING:  # pragma: no cover
 
 @dataclasses.dataclass
 class Cast(BaseExpr):
+    """
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.cast.html
+    """
     type: str = dataclasses.field(default=ExprEnum.cast.value)
     expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
     dtype: pl.DataType = dataclasses.field(default=REQUIRED)

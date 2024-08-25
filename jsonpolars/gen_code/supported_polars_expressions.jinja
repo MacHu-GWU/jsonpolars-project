@@ -1,0 +1,16 @@
+Supported Polars Expressions
+==============================================================================
+
+
+Polars Expressions
+------------------------------------------------------------------------------
+{%- for expr_klass in expr_klass_list %}
+- :class:`~jsonpolars.expr.{{ expr_klass.module_name }}.{{ expr_klass.class_name }}`: `polars doc url <{{ expr_klass.doc_url }}>`_
+{%- endfor %}
+
+
+Polars DataFrame Methods
+------------------------------------------------------------------------------
+{%- for dfop_klass in dfop_klass_list %}
+- :class:`~jsonpolars.dfop.{{ dfop_klass.module_name }}.{{ dfop_klass.class_name }}`: `polars doc url <{{ dfop_klass.doc_url }}>`_
+{%- endfor %}

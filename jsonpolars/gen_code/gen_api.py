@@ -4,11 +4,13 @@
 自动生成 api.py 模块.
 """
 
+import typing as T
+import re
 import importlib
 import dataclasses
 
 from jinja2 import Template
-from jsonpolars.paths import dir_python_lib
+from jsonpolars.paths import dir_project_root, dir_python_lib
 from jsonpolars.base_expr import BaseExpr
 from jsonpolars.base_dfop import BaseDfop
 
@@ -17,13 +19,17 @@ from jsonpolars.base_dfop import BaseDfop
 class Klass:
     module_name: str
     class_name: str
+    doc_url: str
 
 
 dir_expr = dir_python_lib / "expr"
 dir_dfop = dir_python_lib / "dfop"
 
 
-def gen_expr_api():
+p_ref = r"Ref: https://\S+"
+
+
+def gen_expr_api() -> T.List[Klass]:
     ignore_file = [
         "__init__.py",
         "api.py",
@@ -44,9 +50,15 @@ def gen_expr_api():
                         var_name not in ignore_class_name
                     ):
                         print(f"  found class {var_name!r}")
+                        res = re.findall(p_ref, var_value.__doc__)
+                        if res:
+                            doc_url = res[0].split(":", 1)[1].strip()
+                        else:
+                            doc_url = "https://docs.pola.rs/api/python/stable/reference/expressions/index.html"
                         klass = Klass(
                             module_name=path.stem,
                             class_name=var_name,
+                            doc_url=doc_url,
                         )
                         klass_list.append(klass)
 
@@ -57,8 +69,10 @@ def gen_expr_api():
     path_api = dir_expr / "api.py"
     path_api.write_text(content)
 
+    return klass_list
 
-def gen_dfop_api():
+
+def gen_dfop_api() -> T.List[Klass]:
     ignore_file = [
         "__init__.py",
         "api.py",
@@ -79,9 +93,15 @@ def gen_dfop_api():
                         var_name not in ignore_class_name
                     ):
                         print(f"  found class {var_name!r}")
+                        res = re.findall(p_ref, var_value.__doc__)
+                        if res:
+                            doc_url = res[0].split(":", 1)[1].strip()
+                        else:
+                            doc_url = "https://docs.pola.rs/api/python/stable/reference/dataframe/index.html"
                         klass = Klass(
                             module_name=path.stem,
                             class_name=var_name,
+                            doc_url=doc_url,
                         )
                         klass_list.append(klass)
 
@@ -92,6 +112,29 @@ def gen_dfop_api():
     path_api = dir_dfop / "api.py"
     path_api.write_text(content)
 
+    return klass_list
 
-gen_expr_api()
-gen_dfop_api()
+
+def gen_supported_polars_expression_doc(
+    expr_klass_list: T.List[Klass],
+    dfop_klass_list: T.List[Klass],
+):
+    path_tpl = dir_python_lib / "gen_code" / "supported_polars_expressions.jinja"
+    tpl = Template(path_tpl.read_text())
+    content = tpl.render(
+        expr_klass_list=expr_klass_list,
+        dfop_klass_list=dfop_klass_list,
+    )
+    path_doc = (
+        dir_project_root
+        / "docs"
+        / "source"
+        / "02-Supported-Polars-Expressions"
+        / "index.rst"
+    )
+    path_doc.write_text(content)
+
+
+expr_klass_list = gen_expr_api()
+dfop_klass_list = gen_dfop_api()
+gen_supported_polars_expression_doc(expr_klass_list, dfop_klass_list)

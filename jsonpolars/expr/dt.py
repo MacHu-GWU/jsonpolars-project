@@ -109,7 +109,7 @@ expr_enum_to_klass_mapping[ExprEnum.dt_quarter.value] = DtQuarter
 @dataclasses.dataclass
 class DtMonth(BaseExpr):
     """
-    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.month.html#
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.month.html
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_month.value)
@@ -149,7 +149,7 @@ expr_enum_to_klass_mapping[ExprEnum.dt_day.value] = DtDay
 @dataclasses.dataclass
 class DtHour(BaseExpr):
     """
-    https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.hour.html
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.hour.html
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_hour.value)
@@ -169,7 +169,7 @@ expr_enum_to_klass_mapping[ExprEnum.dt_hour.value] = DtHour
 @dataclasses.dataclass
 class DtMinute(BaseExpr):
     """
-    https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.minute.html
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.minute.html
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_minute.value)
@@ -189,7 +189,7 @@ expr_enum_to_klass_mapping[ExprEnum.dt_minute.value] = DtMinute
 @dataclasses.dataclass
 class DtSecond(BaseExpr):
     """
-    https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.second.html
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.second.html
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_second.value)
@@ -209,7 +209,7 @@ expr_enum_to_klass_mapping[ExprEnum.dt_second.value] = DtSecond
 @dataclasses.dataclass
 class DtNanoSecond(BaseExpr):
     """
-    https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.nanosecond.html
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.nanosecond.html
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_nanosecond.value)
@@ -229,7 +229,7 @@ expr_enum_to_klass_mapping[ExprEnum.dt_nanosecond.value] = DtNanoSecond
 @dataclasses.dataclass
 class DtEpoch(BaseExpr):
     """
-    https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.epoch.html
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.epoch.html
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_epoch.value)
@@ -250,7 +250,7 @@ expr_enum_to_klass_mapping[ExprEnum.dt_epoch.value] = DtEpoch
 @dataclasses.dataclass
 class DtTimestamp(BaseExpr):
     """
-    https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.timestamp.html
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.timestamp.html
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_timestamp.value)
@@ -271,7 +271,7 @@ expr_enum_to_klass_mapping[ExprEnum.dt_timestamp.value] = DtTimestamp
 @dataclasses.dataclass
 class DtTotalDays(BaseExpr):
     """
-    https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.total_days.html
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.total_days.html
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_total_days.value)
@@ -291,7 +291,7 @@ expr_enum_to_klass_mapping[ExprEnum.dt_total_days.value] = DtTotalDays
 @dataclasses.dataclass
 class DtTotalHours(BaseExpr):
     """
-    https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.total_hours.html
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.total_hours.html
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_total_hours.value)
@@ -311,7 +311,7 @@ expr_enum_to_klass_mapping[ExprEnum.dt_total_hours.value] = DtTotalHours
 @dataclasses.dataclass
 class DtTotalMinutes(BaseExpr):
     """
-    https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.total_minutes.html
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.total_minutes.html
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_total_minutes.value)
@@ -331,7 +331,7 @@ expr_enum_to_klass_mapping[ExprEnum.dt_total_minutes.value] = DtTotalMinutes
 @dataclasses.dataclass
 class DtTotalSeconds(BaseExpr):
     """
-    https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.total_seconds.html
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.total_seconds.html
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_total_seconds.value)
@@ -351,7 +351,7 @@ expr_enum_to_klass_mapping[ExprEnum.dt_total_seconds.value] = DtTotalSeconds
 @dataclasses.dataclass
 class DtTotalMilliSeconds(BaseExpr):
     """
-    https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.total_milliseconds.html
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.total_milliseconds.html
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_total_milliseconds.value)
@@ -371,7 +371,7 @@ expr_enum_to_klass_mapping[ExprEnum.dt_total_milliseconds.value] = DtTotalMilliS
 @dataclasses.dataclass
 class DtTotalMicroSeconds(BaseExpr):
     """
-    https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.total_microseconds.html
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.total_microseconds.html
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_total_microseconds.value)
@@ -391,7 +391,7 @@ expr_enum_to_klass_mapping[ExprEnum.dt_total_microseconds.value] = DtTotalMicroS
 @dataclasses.dataclass
 class DtTotalNanoSeconds(BaseExpr):
     """
-    https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.total_nanoseconds.html
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.total_nanoseconds.html
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_total_nanoseconds.value)
@@ -411,7 +411,7 @@ expr_enum_to_klass_mapping[ExprEnum.dt_total_nanoseconds.value] = DtTotalNanoSec
 @dataclasses.dataclass
 class DtTruncate(BaseExpr):
     """
-    https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.truncate.html
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.dt.truncate.html
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_truncate.value)

@@ -118,7 +118,7 @@ dfop_enum_to_klass_mapping[DfopEnum.drop.value] = Drop
 @dataclasses.dataclass
 class WithColumns(BaseDfop):
     """
-    Ref: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.with_columns.html#
+    Ref: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.with_columns.html
     """
 
     type: str = dataclasses.field(default=DfopEnum.with_columns.value)
@@ -183,7 +183,7 @@ dfop_enum_to_klass_mapping[DfopEnum.tail.value] = Tail
 @dataclasses.dataclass
 class Sort(BaseDfop):
     """
-    Ref: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.sort.html#
+    Ref: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.sort.html
     """
 
     type: str = dataclasses.field(default=DfopEnum.sort.value)

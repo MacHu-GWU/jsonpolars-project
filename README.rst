@@ -53,7 +53,61 @@ Welcome to ``jsonpolars`` Documentation
 .. image:: https://jsonpolars.readthedocs.io/en/latest/_static/jsonpolars-logo.png
     :target: https://jsonpolars.readthedocs.io/en/latest/
 
-Documentation for ``jsonpolars``.
+``jsonpolars`` is an innovative Python library designed to bridge the gap between JSON-based data manipulation syntax and the powerful Polars data processing library. This project aims to provide a flexible and intuitive way to express Polars operations using JSON structures, making it easier for developers to work with Polars in various contexts. The library allows users to define complex data transformations using JSON syntax, which can then be translated into native Polars operations.
+
+Example:
+
+.. code-block:: python
+
+    import polars as pl
+    from jsonpolars.api import parse_dfop
+
+    df = pl.DataFrame(
+        [
+            {"id": 1, "firstname": "Alice", "lastname": "Smith"},
+            {"id": 2, "firstname": "Bob", "lastname": "Johnson"},
+            {"id": 3, "firstname": "Cathy", "lastname": "Williams"},
+        ]
+    )
+    dfop_data = {
+        "type": "with_columns",
+        "exprs": [
+            {
+                "type": "alias",
+                "name": "fullname",
+                "expr": {
+                    "type": "plus",
+                    "left": {"type": "column", "name": "firstname"},
+                    "right": {
+                        "type": "plus",
+                        "left": {
+                            "type": "lit",
+                            "value": " ",
+                        },
+                        "right": {"type": "column", "name": "lastname"},
+                    },
+                },
+            }
+        ],
+    }
+    op = parse_dfop(dfop_data)
+    df1 = op.to_polars(df)
+    print(df1)
+
+Output:
+
+.. code-block:: python
+
+    shape: (3, 4)
+    ┌─────┬───────────┬──────────┬────────────────┐
+    │ id  ┆ firstname ┆ lastname ┆ fullname       │
+    │ --- ┆ ---       ┆ ---      ┆ ---            │
+    │ i64 ┆ str       ┆ str      ┆ str            │
+    ╞═════╪═══════════╪══════════╪════════════════╡
+    │ 1   ┆ Alice     ┆ Smith    ┆ Alice Smith    │
+    │ 2   ┆ Bob       ┆ Johnson  ┆ Bob Johnson    │
+    │ 3   ┆ Cathy     ┆ Williams ┆ Cathy Williams │
+    └─────┴───────────┴──────────┴────────────────┘
 
 
 .. _install:

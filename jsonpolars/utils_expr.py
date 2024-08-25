@@ -4,7 +4,7 @@ import typing as T
 import polars as pl
 
 from .base_expr import BaseExpr, parse_expr
-from .typehint import IntoExpr, OtherExpr
+from .typehint import IntoExpr, PythonLiteral, OtherExpr
 
 
 if T.TYPE_CHECKING:  # pragma: no cover
@@ -34,3 +34,10 @@ def parse_other_expr(value) -> "OtherExpr":
         return parse_expr(value)
     else:
         return value
+
+
+def other_expr_to_polars(expr: "OtherExpr") -> T.Union["PythonLiteral", "pl.Expr"]:
+    if isinstance(expr, BaseExpr):
+        return expr.to_polars()
+    else:
+        return expr

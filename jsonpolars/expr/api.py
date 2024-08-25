@@ -42,6 +42,11 @@ from .operator import LogicalOr
 from .string import String
 from .string import Split
 from .string import StrJoin
+from .string import StrContains
+from .string import StrDecode
+from .string import StrEncode
+from .string import StrStartsWith
+from .string import StrEndsWith
 from .function import Lit
 from .column import Column
 from .column import Alias
@@ -88,6 +93,11 @@ T_EXPR = T.Union[
     String,
     Split,
     StrJoin,
+    StrContains,
+    StrDecode,
+    StrEncode,
+    StrStartsWith,
+    StrEndsWith,
     Lit,
     Column,
     Alias,

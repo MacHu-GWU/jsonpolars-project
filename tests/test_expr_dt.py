@@ -34,7 +34,7 @@ case_datetime_to_string_2 = Case(
 )
 case_dt_year = Case(
     input_records=[
-        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000)},
     ],
     expr=expr.DtYear(
         expr=expr.Column(name="dt"),
@@ -45,7 +45,7 @@ case_dt_year = Case(
 )
 case_dt_quarter = Case(
     input_records=[
-        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000)},
     ],
     expr=expr.DtQuarter(
         expr=expr.Column(name="dt"),
@@ -56,7 +56,7 @@ case_dt_quarter = Case(
 )
 case_dt_month = Case(
     input_records=[
-        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000)},
     ],
     expr=expr.DtMonth(
         expr=expr.Column(name="dt"),
@@ -67,7 +67,7 @@ case_dt_month = Case(
 )
 case_dt_day = Case(
     input_records=[
-        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000)},
     ],
     expr=expr.DtDay(
         expr=expr.Column(name="dt"),
@@ -78,7 +78,7 @@ case_dt_day = Case(
 )
 case_dt_hour = Case(
     input_records=[
-        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000)},
     ],
     expr=expr.DtHour(
         expr=expr.Column(name="dt"),
@@ -89,7 +89,7 @@ case_dt_hour = Case(
 )
 case_dt_minute = Case(
     input_records=[
-        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000)},
     ],
     expr=expr.DtMinute(
         expr=expr.Column(name="dt"),
@@ -100,7 +100,7 @@ case_dt_minute = Case(
 )
 case_dt_second = Case(
     input_records=[
-        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123, tzinfo=timezone.utc)},
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123)},
     ],
     expr=expr.DtSecond(
         expr=expr.Column(name="dt"),
@@ -111,7 +111,7 @@ case_dt_second = Case(
 )
 case_dt_nanosecond = Case(
     input_records=[
-        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000)},
     ],
     expr=expr.DtNanoSecond(
         expr=expr.Column(name="dt"),
@@ -122,7 +122,7 @@ case_dt_nanosecond = Case(
 )
 case_dt_epoch = Case(
     input_records=[
-        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000)},
     ],
     expr=expr.DtEpoch(
         expr=expr.Column(name="dt"),
@@ -133,7 +133,7 @@ case_dt_epoch = Case(
 )
 case_dt_timestamp = Case(
     input_records=[
-        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000)},
     ],
     expr=expr.DtTimestamp(
         expr=expr.Column(name="dt"),
@@ -144,12 +144,12 @@ case_dt_timestamp = Case(
 )
 case_dt_total_days = Case(
     input_records=[
-        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000)},
     ],
     expr=expr.DtTotalDays(
         expr=expr.Minus(
             left=expr.Column(name="dt"),
-            right=datetime(1970, 1, 1, tzinfo=timezone.utc),
+            right=datetime(1970, 1, 1),
         ),
     ),
     expected_output_records=[
@@ -158,12 +158,12 @@ case_dt_total_days = Case(
 )
 case_dt_total_hours = Case(
     input_records=[
-        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000)},
     ],
     expr=expr.DtTotalHours(
         expr=expr.Minus(
             left=expr.Column(name="dt"),
-            right=datetime(1970, 1, 1, tzinfo=timezone.utc),
+            right=datetime(1970, 1, 1),
         ),
     ),
     expected_output_records=[
@@ -172,12 +172,12 @@ case_dt_total_hours = Case(
 )
 case_dt_total_minutes = Case(
     input_records=[
-        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000)},
     ],
     expr=expr.DtTotalMinutes(
         expr=expr.Minus(
             left=expr.Column(name="dt"),
-            right=datetime(1970, 1, 1, tzinfo=timezone.utc),
+            right=datetime(1970, 1, 1),
         ),
     ),
     expected_output_records=[
@@ -186,12 +186,12 @@ case_dt_total_minutes = Case(
 )
 case_dt_total_seconds = Case(
     input_records=[
-        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000)},
     ],
     expr=expr.DtTotalSeconds(
         expr=expr.Minus(
             left=expr.Column(name="dt"),
-            right=datetime(1970, 1, 1, tzinfo=timezone.utc),
+            right=datetime(1970, 1, 1),
         ),
     ),
     expected_output_records=[
@@ -200,12 +200,12 @@ case_dt_total_seconds = Case(
 )
 case_dt_total_milliseconds = Case(
     input_records=[
-        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000)},
     ],
     expr=expr.DtTotalMilliSeconds(
         expr=expr.Minus(
             left=expr.Column(name="dt"),
-            right=datetime(1970, 1, 1, tzinfo=timezone.utc),
+            right=datetime(1970, 1, 1),
         ),
     ),
     expected_output_records=[
@@ -214,12 +214,12 @@ case_dt_total_milliseconds = Case(
 )
 case_dt_total_microseconds = Case(
     input_records=[
-        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000)},
     ],
     expr=expr.DtTotalMicroSeconds(
         expr=expr.Minus(
             left=expr.Column(name="dt"),
-            right=datetime(1970, 1, 1, tzinfo=timezone.utc),
+            right=datetime(1970, 1, 1),
         ),
     ),
     expected_output_records=[
@@ -228,12 +228,12 @@ case_dt_total_microseconds = Case(
 )
 case_dt_total_nanoseconds = Case(
     input_records=[
-        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000)},
     ],
     expr=expr.DtTotalNanoSeconds(
         expr=expr.Minus(
             left=expr.Column(name="dt"),
-            right=datetime(1970, 1, 1, tzinfo=timezone.utc),
+            right=datetime(1970, 1, 1),
         ),
     ),
     expected_output_records=[
@@ -242,26 +242,26 @@ case_dt_total_nanoseconds = Case(
 )
 case_dt_truncate_1 = Case(
     input_records=[
-        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000)},
     ],
     expr=expr.DtTruncate(
         expr=expr.Column(name="dt"),
         every="1h",
     ),
     expected_output_records=[
-        {"dt": datetime(2021, 6, 15, 14, 0, 0, 0, tzinfo=timezone.utc)},
+        {"dt": datetime(2021, 6, 15, 14, 0, 0, 0)},
     ],
 )
 case_dt_truncate_2 = Case(
     input_records=[
-        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000, tzinfo=timezone.utc)},
+        {"dt": datetime(2021, 6, 15, 14, 30, 45, 123000)},
     ],
     expr=expr.DtTruncate(
         expr=expr.Column(name="dt"),
         every=timedelta(hours=1),
     ),
     expected_output_records=[
-        {"dt": datetime(2021, 6, 15, 14, 0, 0, 0, tzinfo=timezone.utc)},
+        {"dt": datetime(2021, 6, 15, 14, 0, 0, 0)},
     ],
 )
 # fmt: on

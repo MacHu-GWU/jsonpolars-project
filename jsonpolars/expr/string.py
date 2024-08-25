@@ -46,7 +46,36 @@ class Split(BaseExpr):
         )
 
     def to_polars(self) -> pl.Expr:
-        return self.expr.to_polars().split(by=self.by, inclusive=self.inclusive)
+        if isinstance(self.expr, String):
+            expr = self.expr.to_polars()
+        else:
+            expr = self.expr.to_polars().str
+        return expr.split(by=self.by, inclusive=self.inclusive)
 
 
 expr_enum_to_klass_mapping[ExprEnum.str_split.value] = Split
+
+
+@dataclasses.dataclass
+class StrJoin(BaseExpr):
+    type: str = dataclasses.field(default=ExprEnum.str_join.value)
+    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    delimiter: str = dataclasses.field(default="")
+    ignore_nulls: bool = dataclasses.field(default=True)
+
+    @classmethod
+    def from_dict(cls, dct: T.Dict[str, T.Any]):
+        return cls(
+            expr=parse_expr(dct["expr"]),
+            delimiter=dct.get("delimiter", ""),
+            ignore_nulls=dct.get("ignore_nulls", True),
+        )
+
+    def to_polars(self) -> pl.Expr:
+        return self.expr.to_polars().str.join(
+            delimiter=self.delimiter, ignore_nulls=self.ignore_nulls
+        )
+
+
+# Add this class to the expr_enum_to_klass_mapping
+expr_enum_to_klass_mapping[ExprEnum.str_join.value] = StrJoin

@@ -2,10 +2,10 @@
 
 from pathlib import Path
 
-dir_here = Path(__file__).absolute().parent
-PACKAGE_NAME = dir_here.name
+dir_python_lib = Path(__file__).absolute().parent
+PACKAGE_NAME = dir_python_lib.name
 
-dir_project_root = dir_here.parent
+dir_project_root = dir_python_lib.parent
 
 # ------------------------------------------------------------------------------
 # Virtual Environment Related

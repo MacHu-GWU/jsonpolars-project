@@ -9,3 +9,4 @@ include *.rst
 exclude *.pyc
 exclude *.pyo
 exclude jsonpolars/tests/**
+exclude jsonpolars/gen_code/**

@@ -1,2 +1,3 @@
 # Core dependencies goes here
 polars>=1.2.1,<2.0.0
+typing-extensions>=4.10.0; python_version < '3.10'

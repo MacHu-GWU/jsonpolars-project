@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 
 """
-自动生成 api.py 模块.
+自动生下列模块中的代码:
+
+- ``jsonpolars/expr/api.py``
+- ``jsonpolars/dfop/api.py``
+- ``docs/source/02-Supported-Polars-Expressions/index.rst``
 """
 
 import typing as T

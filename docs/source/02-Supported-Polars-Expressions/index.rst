@@ -50,9 +50,28 @@ Polars Expressions
 - :class:`~jsonpolars.expr.string.StrEncode`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.encode.html>`_
 - :class:`~jsonpolars.expr.string.StrStartsWith`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.starts_with.html>`_
 - :class:`~jsonpolars.expr.string.StrEndsWith`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.ends_with.html>`_
+- :class:`~jsonpolars.expr.string.StrToDatetime`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.to_datetime.html>`_
+- :class:`~jsonpolars.expr.string.StrToDate`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.to_date.html>`_
+- :class:`~jsonpolars.expr.string.StrZfill`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.zfill.html>`_
+- :class:`~jsonpolars.expr.string.StrPadStart`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.pad_start.html>`_
+- :class:`~jsonpolars.expr.string.StrPadEnd`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.pad_end.html>`_
+- :class:`~jsonpolars.expr.string.StrToLowerCase`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.to_lowercase.html>`_
+- :class:`~jsonpolars.expr.string.StrToUpperCase`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.to_uppercase.html>`_
+- :class:`~jsonpolars.expr.string.StrToTitleCase`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.to_titlecase.html>`_
+- :class:`~jsonpolars.expr.string.StrHead`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.head.html>`_
+- :class:`~jsonpolars.expr.string.StrTail`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.tail.html>`_
+- :class:`~jsonpolars.expr.string.StrSlice`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.slice.html>`_
+- :class:`~jsonpolars.expr.string.StrReplace`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.replace.html>`_
+- :class:`~jsonpolars.expr.string.StrReplaceAll`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.str.replace_all.html>`_
 - :class:`~jsonpolars.expr.function.Lit`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.lit.html>`_
+- :class:`~jsonpolars.expr.function.ConcatStr`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.concat_str.html>`_
+- :class:`~jsonpolars.expr.function.ConcatList`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.concat_list.html>`_
 - :class:`~jsonpolars.expr.column.Column`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/col.html>`_
 - :class:`~jsonpolars.expr.column.Alias`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.alias.html>`_
+- :class:`~jsonpolars.expr.struct.Struct`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/struct.html>`_
+- :class:`~jsonpolars.expr.struct.StructField`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.struct.field.html>`_
+- :class:`~jsonpolars.expr.struct.StructRenameFields`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.struct.rename_fields.html>`_
+- :class:`~jsonpolars.expr.struct.StructWithFields`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.struct.with_fields.html>`_
 
 
 Polars DataFrame Methods

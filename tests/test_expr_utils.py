@@ -5,8 +5,8 @@ from jsonpolars.expr import api as expr
 from jsonpolars.utils_expr import (
     to_jsonpolars_into_expr,
     to_polars_into_expr,
-    parse_other_expr,
-    other_expr_to_polars,
+    to_jsonpolars_other_expr,
+    to_polars_other_expr,
 )
 
 
@@ -26,15 +26,15 @@ def test_to_polars_into_expr():
 
 
 def test_parse_other_expr():
-    assert parse_other_expr("hello") == "hello"
-    assert parse_other_expr({"type": "column", "name": "col_1"}) == expr.Column(
+    assert to_jsonpolars_other_expr("hello") == "hello"
+    assert to_jsonpolars_other_expr({"type": "column", "name": "col_1"}) == expr.Column(
         name="col_1"
     )
 
 
 def test_other_expr_to_polars():
-    assert other_expr_to_polars("hello") == "hello"
-    assert isinstance(other_expr_to_polars(expr.Column(name="col_1")), pl.Expr)
+    assert to_polars_other_expr("hello") == "hello"
+    assert isinstance(to_polars_other_expr(expr.Column(name="col_1")), pl.Expr)
 
 
 if __name__ == "__main__":

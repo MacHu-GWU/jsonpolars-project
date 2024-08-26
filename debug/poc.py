@@ -8,13 +8,14 @@ import polars as pl
 
 df = pl.DataFrame(
     [
-        {"id": 1, "name": "alice"},
-        {"id": 2, "name": "bob"},
+        {"data": {"x": 2, "y": 3}},
     ]
 )
 
 df1 = df.with_columns(
-    pl.col("id")
+    pl.col("data").struct.with_fields(
+        z=pl.field("x") * pl.field("y")
+    ),
 )
 
 print(df1)

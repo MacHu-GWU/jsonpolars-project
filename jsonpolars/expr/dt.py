@@ -8,7 +8,7 @@ import polars as pl
 
 from ..sentinel import NOTHING, REQUIRED, OPTIONAL
 from ..base_expr import ExprEnum, BaseExpr, expr_enum_to_klass_mapping, parse_expr
-from ..utils_expr import parse_other_expr
+from ..utils_expr import to_jsonpolars_other_expr
 
 
 if T.TYPE_CHECKING:  # pragma: no cover
@@ -422,7 +422,7 @@ class DtTruncate(BaseExpr):
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
             expr=parse_expr(dct["expr"]),
-            every=parse_other_expr(dct["every"]),
+            every=to_jsonpolars_other_expr(dct["every"]),
         )
 
     def to_polars(self) -> pl.Expr:

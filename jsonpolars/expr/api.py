@@ -47,9 +47,28 @@ from .string import StrDecode
 from .string import StrEncode
 from .string import StrStartsWith
 from .string import StrEndsWith
+from .string import StrToDatetime
+from .string import StrToDate
+from .string import StrZfill
+from .string import StrPadStart
+from .string import StrPadEnd
+from .string import StrToLowerCase
+from .string import StrToUpperCase
+from .string import StrToTitleCase
+from .string import StrHead
+from .string import StrTail
+from .string import StrSlice
+from .string import StrReplace
+from .string import StrReplaceAll
 from .function import Lit
+from .function import ConcatStr
+from .function import ConcatList
 from .column import Column
 from .column import Alias
+from .struct import Struct
+from .struct import StructField
+from .struct import StructRenameFields
+from .struct import StructWithFields
 
 T_EXPR = T.Union[
     Cast,
@@ -98,7 +117,26 @@ T_EXPR = T.Union[
     StrEncode,
     StrStartsWith,
     StrEndsWith,
+    StrToDatetime,
+    StrToDate,
+    StrZfill,
+    StrPadStart,
+    StrPadEnd,
+    StrToLowerCase,
+    StrToUpperCase,
+    StrToTitleCase,
+    StrHead,
+    StrTail,
+    StrSlice,
+    StrReplace,
+    StrReplaceAll,
     Lit,
+    ConcatStr,
+    ConcatList,
     Column,
     Alias,
+    Struct,
+    StructField,
+    StructRenameFields,
+    StructWithFields,
 ]

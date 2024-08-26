@@ -7,7 +7,7 @@ import polars as pl
 
 from ..sentinel import NOTHING, REQUIRED, OPTIONAL
 from ..base_expr import ExprEnum, BaseExpr, expr_enum_to_klass_mapping, parse_expr
-from ..utils_expr import parse_other_expr
+from ..utils_expr import to_jsonpolars_other_expr
 
 if T.TYPE_CHECKING:  # pragma: no cover
     from .api import T_EXPR
@@ -39,22 +39,22 @@ class Plus(BaseExpr):
     Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.add.html
     """
 
-    type: str = dataclasses.field(default=ExprEnum.plus.value)
+    type: str = dataclasses.field(default=ExprEnum.add.value)
     left: "OtherExpr" = dataclasses.field(default=REQUIRED)
     right: "OtherExpr" = dataclasses.field(default=REQUIRED)
 
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            left=parse_other_expr(dct["left"]),
-            right=parse_other_expr(dct["right"]),
+            left=to_jsonpolars_other_expr(dct["left"]),
+            right=to_jsonpolars_other_expr(dct["right"]),
         )
 
     def to_polars(self) -> pl.Expr:
         return _other_expr_to_polars(self.left) + _other_expr_to_polars(self.right)
 
 
-expr_enum_to_klass_mapping[ExprEnum.plus.value] = Plus
+expr_enum_to_klass_mapping[ExprEnum.add.value] = Plus
 
 
 @dataclasses.dataclass
@@ -63,22 +63,22 @@ class Minus(BaseExpr):
     Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.sub.html
     """
 
-    type: str = dataclasses.field(default=ExprEnum.minus.value)
+    type: str = dataclasses.field(default=ExprEnum.sub.value)
     left: "OtherExpr" = dataclasses.field(default=REQUIRED)
     right: "OtherExpr" = dataclasses.field(default=REQUIRED)
 
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            left=parse_other_expr(dct["left"]),
-            right=parse_other_expr(dct["right"]),
+            left=to_jsonpolars_other_expr(dct["left"]),
+            right=to_jsonpolars_other_expr(dct["right"]),
         )
 
     def to_polars(self) -> pl.Expr:
         return _other_expr_to_polars(self.left) - _other_expr_to_polars(self.right)
 
 
-expr_enum_to_klass_mapping[ExprEnum.minus.value] = Minus
+expr_enum_to_klass_mapping[ExprEnum.sub.value] = Minus
 
 
 @dataclasses.dataclass
@@ -94,8 +94,8 @@ class Multiply(BaseExpr):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            left=parse_other_expr(dct["left"]),
-            right=parse_other_expr(dct["right"]),
+            left=to_jsonpolars_other_expr(dct["left"]),
+            right=to_jsonpolars_other_expr(dct["right"]),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -118,8 +118,8 @@ class TrueDiv(BaseExpr):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            left=parse_other_expr(dct["left"]),
-            right=parse_other_expr(dct["right"]),
+            left=to_jsonpolars_other_expr(dct["left"]),
+            right=to_jsonpolars_other_expr(dct["right"]),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -142,8 +142,8 @@ class FloorDiv(BaseExpr):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            left=parse_other_expr(dct["left"]),
-            right=parse_other_expr(dct["right"]),
+            left=to_jsonpolars_other_expr(dct["left"]),
+            right=to_jsonpolars_other_expr(dct["right"]),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -165,7 +165,7 @@ class Negative(BaseExpr):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            expr=parse_other_expr(dct["expr"]),
+            expr=to_jsonpolars_other_expr(dct["expr"]),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -188,8 +188,8 @@ class Pow(BaseExpr):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            left=parse_other_expr(dct["left"]),
-            right=parse_other_expr(dct["right"]),
+            left=to_jsonpolars_other_expr(dct["left"]),
+            right=to_jsonpolars_other_expr(dct["right"]),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -212,8 +212,8 @@ class Equal(BaseExpr):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            left=parse_other_expr(dct["left"]),
-            right=parse_other_expr(dct["right"]),
+            left=to_jsonpolars_other_expr(dct["left"]),
+            right=to_jsonpolars_other_expr(dct["right"]),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -236,8 +236,8 @@ class NotEqual(BaseExpr):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            left=parse_other_expr(dct["left"]),
-            right=parse_other_expr(dct["right"]),
+            left=to_jsonpolars_other_expr(dct["left"]),
+            right=to_jsonpolars_other_expr(dct["right"]),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -260,8 +260,8 @@ class GreatThan(BaseExpr):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            left=parse_other_expr(dct["left"]),
-            right=parse_other_expr(dct["right"]),
+            left=to_jsonpolars_other_expr(dct["left"]),
+            right=to_jsonpolars_other_expr(dct["right"]),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -284,8 +284,8 @@ class GreatThanOrEqual(BaseExpr):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            left=parse_other_expr(dct["left"]),
-            right=parse_other_expr(dct["right"]),
+            left=to_jsonpolars_other_expr(dct["left"]),
+            right=to_jsonpolars_other_expr(dct["right"]),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -308,8 +308,8 @@ class LessThan(BaseExpr):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            left=parse_other_expr(dct["left"]),
-            right=parse_other_expr(dct["right"]),
+            left=to_jsonpolars_other_expr(dct["left"]),
+            right=to_jsonpolars_other_expr(dct["right"]),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -332,8 +332,8 @@ class LessThanOrEqual(BaseExpr):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            left=parse_other_expr(dct["left"]),
-            right=parse_other_expr(dct["right"]),
+            left=to_jsonpolars_other_expr(dct["left"]),
+            right=to_jsonpolars_other_expr(dct["right"]),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -356,8 +356,8 @@ class LogicalAnd(BaseExpr):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            left=parse_other_expr(dct["left"]),
-            right=parse_other_expr(dct["right"]),
+            left=to_jsonpolars_other_expr(dct["left"]),
+            right=to_jsonpolars_other_expr(dct["right"]),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -380,8 +380,8 @@ class LogicalOr(BaseExpr):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            left=parse_other_expr(dct["left"]),
-            right=parse_other_expr(dct["right"]),
+            left=to_jsonpolars_other_expr(dct["left"]),
+            right=to_jsonpolars_other_expr(dct["right"]),
         )
 
     def to_polars(self) -> pl.Expr:

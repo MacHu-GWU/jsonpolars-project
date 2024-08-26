@@ -18,13 +18,17 @@ class Case:
     expr: "T_EXPR" = dataclasses.field()
     expected_output_records: T.List[T.Dict[str, T.Any]] = dataclasses.field()
 
+    @property
+    def df_input(self) -> pl.DataFrame:
+        return pl.DataFrame(self.input_records)
+
     def run_with_columns_test(self):
 
         print("---------- input_records ----------")
         rprint(self.input_records)
         print("---------- expr ----------")
         rprint(self.expr)
-        df = pl.DataFrame(self.input_records)
+        df = self.df_input
         df1 = df.with_columns(self.expr.to_polars())
         records = df1.to_dicts()
         print("---------- output_records ----------")

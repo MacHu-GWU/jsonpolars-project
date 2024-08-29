@@ -5,7 +5,7 @@ import dataclasses
 
 import polars as pl
 
-from ..sentinel import NOTHING, REQUIRED, OPTIONAL
+from ..sentinel import NOTHING, REQUIRED, OPTIONAL, resolve_kwargs
 from ..base_expr import ExprEnum, BaseExpr, expr_enum_to_klass_mapping, parse_expr
 from ..utils_expr import (
     batch_to_jsonpolars_into_exprs,
@@ -57,8 +57,10 @@ class ConcatStr(BaseExpr):
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
             exprs=batch_to_jsonpolars_into_exprs(dct["exprs"]),
-            separator=dct["separator"],
-            ignore_nulls=dct["ignore_nulls"],
+            **resolve_kwargs(
+                separator=dct.get("separator", NOTHING),
+                ignore_nulls=dct.get("ignore_nulls", NOTHING),
+            ),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -84,7 +86,7 @@ class ConcatList(BaseExpr):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            exprs=batch_to_jsonpolars_into_exprs(dct["exprs"]),
+            exprs=batch_to_jsonpolars_into_exprs(dct.get("exprs", list())),
         )
 
     def to_polars(self) -> pl.Expr:

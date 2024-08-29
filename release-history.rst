@@ -15,6 +15,14 @@ x.y.z (Backlog)
 **Miscellaneous**
 
 
+0.2.2 (2024-08-29)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**Features and Improvements**
+
+- From dict now no need to pass value for those fields with default value
+- Cast dtype should be str, not polars DataType
+
+
 0.2.1 (2024-08-26)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 **Features and Improvements**

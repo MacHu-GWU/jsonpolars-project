@@ -120,3 +120,21 @@ def to_polars_other_expr(
         return expr_like.to_polars()
     else:
         return expr_like
+
+
+str_to_polars_dtype_mapping = {
+    "Int8": pl.Int8,
+    "Int16": pl.Int16,
+    "Int32": pl.Int32,
+    "Int64": pl.Int64,
+    "Float32": pl.Float32,
+    "Float64": pl.Float64,
+    "Decimal": pl.Decimal,
+    "String": pl.String,
+    "Binary": pl.Binary,
+    "Boolean": pl.Boolean,
+    "Null": pl.Null,
+    "Datetime": pl.Datetime,
+    "Date": pl.Date,
+    "Duration": pl.Duration,
+}

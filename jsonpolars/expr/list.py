@@ -5,7 +5,7 @@ import dataclasses
 
 import polars as pl
 
-from ..sentinel import NOTHING, REQUIRED, OPTIONAL
+from ..sentinel import NOTHING, REQUIRED, OPTIONAL, resolve_kwargs
 from ..base_expr import ExprEnum, BaseExpr, expr_enum_to_klass_mapping, parse_expr
 
 if T.TYPE_CHECKING:  # pragma: no cover
@@ -62,7 +62,9 @@ class ListGet(BaseExpr):
         return cls(
             expr=parse_expr(dct["expr"]),
             index=index,
-            null_on_oob=dct["null_on_oob"],
+            **resolve_kwargs(
+                null_on_oob=dct.get("null_on_oob", NOTHING),
+            ),
         )
 
     def to_polars(self) -> pl.Expr:

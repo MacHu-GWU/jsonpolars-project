@@ -17,6 +17,7 @@ class Column(BaseExpr):
     """
     Ref: https://docs.pola.rs/api/python/stable/reference/expressions/col.html
     """
+
     type: str = dataclasses.field(default=ExprEnum.column.value)
     name: str = dataclasses.field(default=REQUIRED)
 
@@ -32,6 +33,7 @@ class Alias(BaseExpr):
     """
     Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.alias.html
     """
+
     type: str = dataclasses.field(default=ExprEnum.alias.value)
     name: str = dataclasses.field(default=REQUIRED)
     expr: "T_EXPR" = dataclasses.field(default=REQUIRED)

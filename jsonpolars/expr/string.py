@@ -5,7 +5,7 @@ import dataclasses
 
 import polars as pl
 
-from ..sentinel import NOTHING, REQUIRED, OPTIONAL
+from ..sentinel import NOTHING, REQUIRED, OPTIONAL, resolve_kwargs
 from ..base_expr import ExprEnum, BaseExpr, expr_enum_to_klass_mapping, parse_expr
 from ..utils_expr import to_jsonpolars_other_expr, to_polars_other_expr
 
@@ -32,7 +32,9 @@ class String(BaseExpr):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            expr=parse_expr(dct["expr"]),
+            **resolve_kwargs(
+                expr=parse_expr(dct["expr"]),
+            )
         )
 
     def to_polars(self) -> pl.Expr:
@@ -57,8 +59,10 @@ class Split(BaseExpr):
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
             expr=parse_expr(dct["expr"]),
-            by=dct["by"],
-            inclusive=dct["inclusive"],
+            **resolve_kwargs(
+                by=dct.get("by", NOTHING),
+                inclusive=dct.get("inclusive", NOTHING),
+            ),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -83,8 +87,10 @@ class StrJoin(BaseExpr):
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
             expr=parse_expr(dct["expr"]),
-            delimiter=dct.get("delimiter", ""),
-            ignore_nulls=dct.get("ignore_nulls", True),
+            **resolve_kwargs(
+                delimiter=dct.get("delimiter", NOTHING),
+                ignore_nulls=dct.get("ignore_nulls", NOTHING),
+            ),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -114,8 +120,10 @@ class StrContains(BaseExpr):
         return cls(
             expr=parse_expr(dct["expr"]),
             pattern=to_jsonpolars_other_expr(dct["pattern"]),
-            literal=dct["literal"],
-            strict=dct["strict"],
+            **resolve_kwargs(
+                literal=dct.get("literal", NOTHING),
+                strict=dct.get("strict", NOTHING),
+            ),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -145,7 +153,9 @@ class StrDecode(BaseExpr):
         return cls(
             expr=parse_expr(dct["expr"]),
             encoding=dct["encoding"],
-            strict=dct["strict"],
+            **resolve_kwargs(
+                strict=dct.get("strict", NOTHING),
+            ),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -254,13 +264,15 @@ class StrToDatetime(BaseExpr):
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
             expr=parse_expr(dct["expr"]),
-            format=dct["format"],
-            time_unit=dct["time_unit"],
-            time_zone=dct["time_zone"],
-            strict=dct["strict"],
-            exact=dct["exact"],
-            cache=dct["cache"],
-            ambiguous=dct["ambiguous"],
+            **resolve_kwargs(
+                format=dct.get("format", NOTHING),
+                time_unit=dct.get("time_unit", NOTHING),
+                time_zone=dct.get("time_zone", NOTHING),
+                strict=dct.get("strict", NOTHING),
+                exact=dct.get("exact", NOTHING),
+                cache=dct.get("cache", NOTHING),
+                ambiguous=dct.get("ambiguous", NOTHING),
+            ),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -295,10 +307,12 @@ class StrToDate(BaseExpr):
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
             expr=parse_expr(dct["expr"]),
-            format=dct["format"],
-            strict=dct["strict"],
-            exact=dct["exact"],
-            cache=dct["cache"],
+            **resolve_kwargs(
+                format=dct.get("format", NOTHING),
+                strict=dct.get("strict", NOTHING),
+                exact=dct.get("exact", NOTHING),
+                cache=dct.get("cache", NOTHING),
+            ),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -353,7 +367,9 @@ class StrPadStart(BaseExpr):
         return cls(
             expr=parse_expr(dct["expr"]),
             length=dct["length"],
-            fill_char=dct["fill_char"],
+            **resolve_kwargs(
+                fill_char=dct.get("fill_char", NOTHING),
+            ),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -382,7 +398,9 @@ class StrPadEnd(BaseExpr):
         return cls(
             expr=parse_expr(dct["expr"]),
             length=dct["length"],
-            fill_char=dct["fill_char"],
+            **resolve_kwargs(
+                fill_char=dct.get("fill_char", NOTHING),
+            ),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -557,8 +575,10 @@ class StrReplace(BaseExpr):
             expr=parse_expr(dct["expr"]),
             pattern=to_jsonpolars_other_expr(dct["pattern"]),
             value=to_jsonpolars_other_expr(dct["value"]),
-            literal=dct["literal"],
-            n=dct["n"],
+            **resolve_kwargs(
+                literal=dct.get("literal", NOTHING),
+                n=dct.get("n", NOTHING),
+            ),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -591,7 +611,9 @@ class StrReplaceAll(BaseExpr):
             expr=parse_expr(dct["expr"]),
             pattern=to_jsonpolars_other_expr(dct["pattern"]),
             value=to_jsonpolars_other_expr(dct["value"]),
-            literal=dct["literal"],
+            **resolve_kwargs(
+                literal=dct.get("literal", NOTHING),
+            ),
         )
 
     def to_polars(self) -> pl.Expr:

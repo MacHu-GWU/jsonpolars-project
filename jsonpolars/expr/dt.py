@@ -6,7 +6,7 @@ from datetime import timedelta
 
 import polars as pl
 
-from ..sentinel import NOTHING, REQUIRED, OPTIONAL
+from ..sentinel import NOTHING, REQUIRED, OPTIONAL, resolve_kwargs
 from ..base_expr import ExprEnum, BaseExpr, expr_enum_to_klass_mapping, parse_expr
 from ..utils_expr import to_jsonpolars_other_expr
 
@@ -238,7 +238,12 @@ class DtEpoch(BaseExpr):
 
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
-        return cls(expr=parse_expr(dct["expr"]), time_unit=dct["time_unit"])
+        return cls(
+            expr=parse_expr(dct["expr"]),
+            **resolve_kwargs(
+                time_unit=dct.get("time_unit", NOTHING),
+            ),
+        )
 
     def to_polars(self) -> pl.Expr:
         return ensure_datetime(self.expr).epoch(time_unit=self.time_unit)
@@ -259,7 +264,12 @@ class DtTimestamp(BaseExpr):
 
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
-        return cls(expr=parse_expr(dct["expr"]), time_unit=dct["time_unit"])
+        return cls(
+            expr=parse_expr(dct["expr"]),
+            **resolve_kwargs(
+                time_unit=dct.get("time_unit", NOTHING),
+            ),
+        )
 
     def to_polars(self) -> pl.Expr:
         return ensure_datetime(self.expr).timestamp(time_unit=self.time_unit)

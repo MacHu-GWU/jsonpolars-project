@@ -5,8 +5,7 @@ import dataclasses
 
 import polars as pl
 
-from ..sentinel import NOTHING, REQUIRED, OPTIONAL
-from ..expr import api as expr
+from ..sentinel import NOTHING, REQUIRED, OPTIONAL, resolve_kwargs
 from ..utils_expr import (
     batch_to_jsonpolars_into_exprs,
     batch_to_jsonpolars_named_into_exprs,
@@ -34,8 +33,10 @@ class Select(BaseDfop):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            exprs=batch_to_jsonpolars_into_exprs(dct["exprs"]),
-            named_exprs=batch_to_jsonpolars_named_into_exprs(dct["named_exprs"]),
+            exprs=batch_to_jsonpolars_into_exprs(dct.get("exprs", list())),
+            named_exprs=batch_to_jsonpolars_named_into_exprs(
+                dct.get("named_exprs", dict())
+            ),
         )
 
     def to_polars(self, df: pl.DataFrame) -> pl.DataFrame:
@@ -86,7 +87,9 @@ class Drop(BaseDfop):
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
             columns=batch_to_jsonpolars_into_exprs(dct["columns"]),
-            strict=dct["strict"],
+            **resolve_kwargs(
+                strict=dct.get("strict", NOTHING),
+            ),
         )
 
     def to_polars(self, df: pl.DataFrame) -> pl.DataFrame:
@@ -112,8 +115,10 @@ class WithColumns(BaseDfop):
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
-            exprs=batch_to_jsonpolars_into_exprs(dct["exprs"]),
-            named_exprs=batch_to_jsonpolars_named_into_exprs(dct["named_exprs"]),
+            exprs=batch_to_jsonpolars_into_exprs(dct.get("exprs", list())),
+            named_exprs=batch_to_jsonpolars_named_into_exprs(
+                dct.get("named_exprs", dict())
+            ),
         )
 
     def to_polars(self, df: pl.DataFrame) -> pl.DataFrame:
@@ -137,7 +142,11 @@ class Head(BaseDfop):
 
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
-        return cls(n=dct["n"])
+        return cls(
+            **resolve_kwargs(
+                n=dct.get("n", NOTHING),
+            ),
+        )
 
     def to_polars(self, df: pl.DataFrame) -> pl.DataFrame:
         return df.head(self.n)
@@ -157,7 +166,11 @@ class Tail(BaseDfop):
 
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
-        return cls(n=dct["n"])
+        return cls(
+            **resolve_kwargs(
+                n=dct.get("n", NOTHING),
+            ),
+        )
 
     def to_polars(self, df: pl.DataFrame) -> pl.DataFrame:
         return df.tail(self.n)
@@ -183,10 +196,12 @@ class Sort(BaseDfop):
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
             by=batch_to_jsonpolars_into_exprs(dct["by"]),
-            descending=dct["descending"],
-            nulls_last=dct["nulls_last"],
-            multithreaded=dct["multithreaded"],
-            maintain_order=dct["maintain_order"],
+            **resolve_kwargs(
+                descending=dct.get("descending", NOTHING),
+                nulls_last=dct.get("nulls_last", NOTHING),
+                multithreaded=dct.get("multithreaded", NOTHING),
+                maintain_order=dct.get("maintain_order", NOTHING),
+            ),
         )
 
     def to_polars(self, df: pl.DataFrame) -> pl.DataFrame:
@@ -213,7 +228,7 @@ class DropNulls(BaseDfop):
 
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
-        if dct["subset"] is None:
+        if dct.get("subset") is None:
             subset = None
         else:
             subset = batch_to_jsonpolars_into_exprs(dct["subset"])

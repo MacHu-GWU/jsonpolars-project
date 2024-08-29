@@ -62,11 +62,11 @@ class StructField(BaseExpr):
 
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
-
-        return cls(
-            expr=to_jsonpolars_other_expr(dct["expr"]),
-            name=dct["name"],
-        )
+        kwargs = dict(name=dct["name"])
+        expr = dct["expr"]
+        if expr is not None:
+            kwargs["expr"] = to_jsonpolars_other_expr(dct["expr"])
+        return cls(**kwargs)
 
     def to_polars(self) -> pl.Expr:
         if self.expr is None:
@@ -127,8 +127,8 @@ class StructWithFields(BaseExpr):
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
             expr=parse_expr(dct["expr"]),
-            exprs=batch_to_jsonpolars_into_exprs(dct["exprs"]),
-            named_exprs=batch_to_jsonpolars_named_into_exprs(dct["named_exprs"]),
+            exprs=batch_to_jsonpolars_into_exprs(dct.get("exprs", list())),
+            named_exprs=batch_to_jsonpolars_named_into_exprs(dct.get("named_exprs", dict())),
         )
 
     def to_polars(self) -> pl.Expr:

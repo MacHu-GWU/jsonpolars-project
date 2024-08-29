@@ -18,4 +18,5 @@ sub packages and modules
     manipulation <manipulation>
     operator <operator>
     string <string>
+    struct <struct>
     

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import json
 import polars as pl
 
 from jsonpolars.api import expr, dfop
@@ -30,4 +31,4 @@ op = dfop.WithColumns(
 df1 = op.to_polars(df)
 print(df1)
 
-print(op.to_dict())
+print(json.dumps(op.to_dict(), indent=4))

@@ -7,6 +7,7 @@ def test():
     _ = api
     _ = api.ExprEnum
     _ = api.parse_expr
+    _ = api.PolarsTypeNameEnum
     _ = api.T_EXPR
     _ = api.expr
     _ = api.DfopEnum

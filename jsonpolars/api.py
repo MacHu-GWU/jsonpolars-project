@@ -2,6 +2,7 @@
 
 from .base_expr import ExprEnum
 from .base_expr import parse_expr
+from .utils_expr import PolarsTypeNameEnum
 from .expr.api import T_EXPR
 from .expr import api as expr
 from .base_dfop import DfopEnum

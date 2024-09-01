@@ -8,6 +8,7 @@
 """
 
 import typing as T
+
 import polars as pl
 
 from .base_expr import BaseExpr, parse_expr
@@ -122,19 +123,36 @@ def to_polars_other_expr(
         return expr_like
 
 
+class PolarsTypeNameEnum:
+    Int8 = "Int8"
+    Int16 = "Int16"
+    Int32 = "Int32"
+    Int64 = "Int64"
+    Float32 = "Float32"
+    Float64 = "Float64"
+    Decimal = "Decimal"
+    String = "String"
+    Binary = "Binary"
+    Boolean = "Boolean"
+    Null = "Null"
+    Datetime = "Datetime"
+    Date = "Date"
+    Duration = "Duration"
+
+
 str_to_polars_dtype_mapping = {
-    "Int8": pl.Int8,
-    "Int16": pl.Int16,
-    "Int32": pl.Int32,
-    "Int64": pl.Int64,
-    "Float32": pl.Float32,
-    "Float64": pl.Float64,
-    "Decimal": pl.Decimal,
-    "String": pl.String,
-    "Binary": pl.Binary,
-    "Boolean": pl.Boolean,
-    "Null": pl.Null,
-    "Datetime": pl.Datetime,
-    "Date": pl.Date,
-    "Duration": pl.Duration,
+    PolarsTypeNameEnum.Int8: pl.Int8,
+    PolarsTypeNameEnum.Int16: pl.Int16,
+    PolarsTypeNameEnum.Int32: pl.Int32,
+    PolarsTypeNameEnum.Int64: pl.Int64,
+    PolarsTypeNameEnum.Float32: pl.Float32,
+    PolarsTypeNameEnum.Float64: pl.Float64,
+    PolarsTypeNameEnum.Decimal: pl.Decimal,
+    PolarsTypeNameEnum.String: pl.String,
+    PolarsTypeNameEnum.Binary: pl.Binary,
+    PolarsTypeNameEnum.Boolean: pl.Boolean,
+    PolarsTypeNameEnum.Null: pl.Null,
+    PolarsTypeNameEnum.Datetime: pl.Datetime,
+    PolarsTypeNameEnum.Date: pl.Date,
+    PolarsTypeNameEnum.Duration: pl.Duration,
 }

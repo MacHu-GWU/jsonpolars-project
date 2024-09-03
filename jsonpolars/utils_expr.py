@@ -138,6 +138,8 @@ class PolarsTypeNameEnum:
     Datetime = "Datetime"
     Date = "Date"
     Duration = "Duration"
+    List = "List"
+    Struct = "Struct"
 
 
 str_to_polars_dtype_mapping = {
@@ -155,4 +157,9 @@ str_to_polars_dtype_mapping = {
     PolarsTypeNameEnum.Datetime: pl.Datetime,
     PolarsTypeNameEnum.Date: pl.Date,
     PolarsTypeNameEnum.Duration: pl.Duration,
+}
+
+polars_dtype_to_str_mapping = {
+    v: k
+    for k, v in str_to_polars_dtype_mapping.items()
 }

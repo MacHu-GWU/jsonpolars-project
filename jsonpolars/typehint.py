@@ -31,6 +31,8 @@ IntoExprColumn: T.TypeAlias = T.Union["T_EXPR", str]
 IntoExpr: T.TypeAlias = T.Union[PythonLiteral, "T_EXPR", None]
 # Inputs that can be interactive with +, -, *, /, etc.
 OtherExpr: T.TypeAlias = T.Union[PythonLiteral, "T_EXPR"]
+# Year, Month, Day
+DatetimeElementExpr: T.TypeAlias = T.Union["T_EXPR", str, int]
 
 # selector type, and related collection/sequence
 ColumnNameOrSelector: T.TypeAlias = T.Union[str, "T_EXPR"]

@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 
 import typing as T
+import dataclasses
 
 
+@dataclasses.dataclass(frozen=True)
 class _REQUIRED:
     def __eq__(self, other):
         return isinstance(other, _REQUIRED)
 
 
+@dataclasses.dataclass(frozen=True)
 class _NOTHING:
     def __eq__(self, other):
         print(self, other)

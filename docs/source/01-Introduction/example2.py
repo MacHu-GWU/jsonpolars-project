@@ -17,14 +17,11 @@ dfop_data = {
             "type": "alias",
             "name": "fullname",
             "expr": {
-                "type": "plus",
+                "type": "add",
                 "left": {"type": "column", "name": "firstname"},
                 "right": {
-                    "type": "plus",
-                    "left": {
-                        "type": "lit",
-                        "value": " ",
-                    },
+                    "type": "add",
+                    "left": {"type": "func_lit", "value": " "},
                     "right": {"type": "column", "name": "lastname"},
                 },
             },

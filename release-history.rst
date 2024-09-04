@@ -15,6 +15,14 @@ x.y.z (Backlog)
 **Miscellaneous**
 
 
+0.3.1 (2024-09-04)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**Features and Improvements**
+
+- Now all ``BaseDfop`` and ``BaseExpr`` has a stable ``to_dict()`` and ``from_dict()`` method.
+- Now all ``BaseDfop`` and ``BaseExpr`` constructor will automatically use the polars default value if the user does not pass the value.
+
+
 0.2.3 (2024-08-31)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 **Minor Improvements**

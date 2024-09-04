@@ -13,8 +13,7 @@ from .model import BaseModel
 from .base_expr import BaseExpr
 
 from .exc import ParamError
-from .arg import _REQUIRED, REQ, rm_na, T_KWARGS
-from .sentinel import NOTHING, REQUIRED, OPTIONAL
+from .arg import REQ, rm_na, T_KWARGS
 
 if T.TYPE_CHECKING:  # pragma: no cover
     from .dfop.api import T_DFOP

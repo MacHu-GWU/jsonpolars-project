@@ -5,10 +5,8 @@ import enum
 import dataclasses
 
 import polars as pl
-from .vendor.better_dataclasses import DataClass, T_DATA
 
-from .arg import _REQUIRED, REQ, rm_na, T_KWARGS
-from .exc import ParamError
+from .arg import REQ, rm_na, T_KWARGS
 from .model import BaseModel
 
 if T.TYPE_CHECKING:  # pragma: no cover

@@ -75,7 +75,6 @@ Polars Expressions
 - :class:`~jsonpolars.expr.struct.Struct`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/struct.html>`_
 - :class:`~jsonpolars.expr.struct.StructField`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.struct.field.html>`_
 - :class:`~jsonpolars.expr.struct.StructRenameFields`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.struct.rename_fields.html>`_
-- :class:`~jsonpolars.expr.struct.FuncField`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.struct.field.html>`_
 - :class:`~jsonpolars.expr.struct.StructWithFields`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.struct.with_fields.html>`_
 
 

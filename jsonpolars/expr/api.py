@@ -72,7 +72,6 @@ from .column import Alias
 from .struct import Struct
 from .struct import StructField
 from .struct import StructRenameFields
-from .struct import FuncField
 from .struct import StructWithFields
 
 T_EXPR = T.Union[
@@ -147,6 +146,5 @@ T_EXPR = T.Union[
     Struct,
     StructField,
     StructRenameFields,
-    FuncField,
     StructWithFields,
 ]

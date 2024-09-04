@@ -3,7 +3,7 @@
 import polars as pl
 from datetime import date, datetime
 
-from simpletype.api import String, Struct
+from simpletype.api import Integer, Struct
 from jsonpolars.expr import api as expr
 from jsonpolars.utils_expr import PolarsTypeNameEnum
 from jsonpolars.tests.expr_case import Case
@@ -200,6 +200,28 @@ case_func_struct_5 = Case(
         {"data": {"a": 1, "b": 2, "c": 3}, "res": {"a": 1, "b": 2}},
     ],
 )
+case_func_struct_6 = Case(
+    input_records=[
+        {
+            "a": 1,
+            "b": 2,
+            "c": 3,
+        },
+    ],
+    expr=expr.Alias(
+        expr=expr.FuncStruct(
+            exprs=["a", "b"],
+            schema={
+                "a": Integer().to_dict(),
+                "b": Integer().to_dict(),
+            },
+        ),
+        name="data",
+    ),
+    expected_output_records=[
+        {"a": 1, "b": 2, "c": 3, "data": {"a": 1, "b": 2}},
+    ],
+)
 case_format = Case(
     input_records=[
         {"col_1": "a", "col_2": 1},
@@ -282,6 +304,7 @@ def test():
     case_func_struct_3.run_with_columns_test()
     case_func_struct_4.run_with_columns_test()
     case_func_struct_5.run_with_columns_test()
+    case_func_struct_6.run_with_columns_test()
     case_format.run_with_columns_test()
     case_date_1.run_with_columns_test()
     case_date_2.run_with_columns_test()

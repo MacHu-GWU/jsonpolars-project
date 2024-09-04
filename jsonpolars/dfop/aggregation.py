@@ -5,10 +5,8 @@ import dataclasses
 
 import polars as pl
 
-from ..sentinel import NOTHING, REQUIRED, OPTIONAL
 from ..expr import api as expr
 from ..base_dfop import DfopEnum, BaseDfop, dfop_enum_to_klass_mapping
-from ..vendor.better_dataclasses import T_DATA
 
 if T.TYPE_CHECKING:  # pragma: no cover
     from .api import T_DFOP
@@ -24,20 +22,12 @@ class Count(BaseDfop):
 
     type: str = dataclasses.field(default=DfopEnum.count.value)
 
-    def to_dict(self) -> T_DATA:
-        return dict(
-            type=self.type,
-        )
-
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls()
-
-
 
     def to_polars(self, df: pl.DataFrame) -> pl.DataFrame:
         return df.count()
 
 
 dfop_enum_to_klass_mapping[DfopEnum.count.value] = Count
-

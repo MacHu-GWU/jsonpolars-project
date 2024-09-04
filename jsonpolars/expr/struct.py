@@ -117,28 +117,6 @@ expr_enum_to_klass_mapping[ExprEnum.struct_rename_fields.value] = StructRenameFi
 
 
 @dataclasses.dataclass
-class FuncField(BaseExpr):
-    """
-    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.struct.field.html
-    """
-
-    type: str = dataclasses.field(default=ExprEnum.func_field.value)
-    name: str = dataclasses.field(default_factory=REQ)
-
-    @classmethod
-    def from_dict(cls, dct: T_KWARGS):
-        return cls(
-            name=dct["name"],
-        )
-
-    def to_polars(self) -> pl.Expr:
-        return pl.field(self.name)
-
-
-expr_enum_to_klass_mapping[ExprEnum.func_field.value] = FuncField
-
-
-@dataclasses.dataclass
 class StructWithFields(BaseExpr):
     """
     Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.struct.with_fields.html

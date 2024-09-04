@@ -4,6 +4,7 @@ import typing as T
 from .manipulation import Cast
 from .list import List
 from .list import ListGet
+from .list import ListEval
 from .dt import Datetime
 from .dt import DtToString
 from .dt import DtYear
@@ -67,6 +68,7 @@ from .function import FuncStruct
 from .function import Format
 from .function import FuncDate
 from .function import FuncDatetime
+from .function import Element
 from .column import Column
 from .column import Alias
 from .struct import Struct
@@ -78,6 +80,7 @@ T_EXPR = T.Union[
     Cast,
     List,
     ListGet,
+    ListEval,
     Datetime,
     DtToString,
     DtYear,
@@ -141,6 +144,7 @@ T_EXPR = T.Union[
     Format,
     FuncDate,
     FuncDatetime,
+    Element,
     Column,
     Alias,
     Struct,

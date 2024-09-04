@@ -77,3 +77,29 @@ class ListGet(BaseExpr):
 
 
 expr_enum_to_klass_mapping[ExprEnum.list_get.value] = ListGet
+
+
+@dataclasses.dataclass
+class ListEval(BaseExpr):
+    """
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.list.eval.html
+    """
+
+    type: str = dataclasses.field(default=ExprEnum.list_eval.value)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    expr_to_run: "T_EXPR" = dataclasses.field(default=REQ)
+    parallel: bool = dataclasses.field(default=NA)
+
+    @classmethod
+    def from_dict(cls, dct: T.Dict[str, T.Any]):
+        req_kwargs, opt_kwargs = cls._split_req_opt(dct)
+        req_kwargs["expr"] = parse_expr(req_kwargs["expr"])
+        req_kwargs["expr_to_run"] = parse_expr(req_kwargs["expr_to_run"])
+        return cls(**req_kwargs, **rm_na(**opt_kwargs))
+
+    def to_polars(self) -> pl.Expr:
+        expr = ensure_list(self.expr)
+        return expr.eval(self.expr_to_run.to_polars(), **rm_na(parallel=self.parallel))
+
+
+expr_enum_to_klass_mapping[ExprEnum.list_eval.value] = ListEval

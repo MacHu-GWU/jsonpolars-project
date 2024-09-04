@@ -31,7 +31,9 @@ class Lit(BaseExpr):
 
     type: str = dataclasses.field(default=ExprEnum.func_lit.value)
     value: T.Any = dataclasses.field(default=REQ)
-    dtype: T.Union[str, "pl.DataType", T.Type["pl.DataType"]] = dataclasses.field(default=NA)
+    dtype: T.Union[str, "pl.DataType", T.Type["pl.DataType"]] = dataclasses.field(
+        default=NA
+    )
     allow_object: bool = dataclasses.field(default=NA)
 
     def to_dict(self) -> T_KWARGS:
@@ -247,3 +249,18 @@ class FuncDatetime(BaseExpr):
 
 
 expr_enum_to_klass_mapping[ExprEnum.func_datetime.value] = FuncDatetime
+
+
+@dataclasses.dataclass
+class Element(BaseExpr):
+    """
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.element.html
+    """
+
+    type: str = dataclasses.field(default=ExprEnum.func_element.value)
+
+    def to_polars(self) -> pl.Expr:
+        return pl.element()
+
+
+expr_enum_to_klass_mapping[ExprEnum.func_element.value] = Element

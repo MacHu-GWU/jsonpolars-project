@@ -66,11 +66,16 @@ Polars Expressions
 - :class:`~jsonpolars.expr.function.Lit`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.lit.html>`_
 - :class:`~jsonpolars.expr.function.ConcatStr`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.concat_str.html>`_
 - :class:`~jsonpolars.expr.function.ConcatList`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.concat_list.html>`_
+- :class:`~jsonpolars.expr.function.FuncStruct`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.struct.html>`_
+- :class:`~jsonpolars.expr.function.Format`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.format.html>`_
+- :class:`~jsonpolars.expr.function.FuncDate`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.date.html>`_
+- :class:`~jsonpolars.expr.function.FuncDatetime`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.datetime.html>`_
 - :class:`~jsonpolars.expr.column.Column`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/col.html>`_
 - :class:`~jsonpolars.expr.column.Alias`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.alias.html>`_
 - :class:`~jsonpolars.expr.struct.Struct`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/struct.html>`_
 - :class:`~jsonpolars.expr.struct.StructField`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.struct.field.html>`_
 - :class:`~jsonpolars.expr.struct.StructRenameFields`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.struct.rename_fields.html>`_
+- :class:`~jsonpolars.expr.struct.FuncField`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.struct.field.html>`_
 - :class:`~jsonpolars.expr.struct.StructWithFields`: `polars doc url <https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.struct.with_fields.html>`_
 
 

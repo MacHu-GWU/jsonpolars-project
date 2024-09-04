@@ -20,7 +20,7 @@ def test_sentinel():
 
 def test_rm_na():
     kwargs = {"a": 1, "b": NA}
-    assert rm_na(kwargs) == {"a": 1}
+    assert rm_na(**kwargs) == {"a": 1}
 
 
 if __name__ == "__main__":

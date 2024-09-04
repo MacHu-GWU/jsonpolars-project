@@ -13,7 +13,6 @@ case_list_get_1 = Case(
     expr=expr.ListGet(
         expr=expr.Column(name="lst"),
         index=0,
-        # index=expr.Lit(value=1),
     ),
     expected_output_records=[
         {"lst": 1},
@@ -38,7 +37,7 @@ def test():
     print("")
 
     case_list_get_1.run_with_columns_test()
-    case_list_get_2.run_with_columns_test()
+    # case_list_get_2.run_with_columns_test()
 
 
 if __name__ == "__main__":

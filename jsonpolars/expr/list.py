@@ -5,7 +5,7 @@ import dataclasses
 
 import polars as pl
 
-from ..sentinel import NOTHING, REQUIRED, OPTIONAL, resolve_kwargs
+from ..arg import REQ, NA, rm_na, T_KWARGS
 from ..base_expr import ExprEnum, BaseExpr, expr_enum_to_klass_mapping, parse_expr
 
 if T.TYPE_CHECKING:  # pragma: no cover
@@ -24,11 +24,12 @@ class List(BaseExpr):
     """
     Ref: https://docs.pola.rs/api/python/stable/reference/expressions/list.html
     """
+
     type: str = dataclasses.field(default=ExprEnum.list.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             expr=parse_expr(dct["expr"]),
         )
@@ -45,27 +46,24 @@ class ListGet(BaseExpr):
     """
     Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.list.get.html#polars.Expr.list.get
     """
+
     type: str = dataclasses.field(default=ExprEnum.list_get.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    index: T.Union[int, "T_EXPR"] = dataclasses.field(default=REQUIRED)
-    null_on_oob: bool = dataclasses.field(default=False)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    index: T.Union[int, "T_EXPR"] = dataclasses.field(default=REQ)
+    null_on_oob: bool = dataclasses.field(default=NA)
 
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
-        index = dct["index"]
+        req_kwargs, opt_kwargs = cls._split_req_opt(dct)
+        req_kwargs["expr"] = parse_expr(req_kwargs["expr"])
+        index = req_kwargs["index"]
         if isinstance(index, int):
             pass
         elif isinstance(index, dict):
-            index = parse_expr(index)
+            req_kwargs["index"] = parse_expr(index)
         else:  # pragma: no cover
             raise ValueError(f"Unknown index type: {index}")
-        return cls(
-            expr=parse_expr(dct["expr"]),
-            index=index,
-            **resolve_kwargs(
-                null_on_oob=dct.get("null_on_oob", NOTHING),
-            ),
-        )
+        return cls(**req_kwargs, **rm_na(**opt_kwargs))
 
     def to_polars(self) -> pl.Expr:
         expr = ensure_list(self.expr)
@@ -73,7 +71,9 @@ class ListGet(BaseExpr):
             index = self.index
         elif isinstance(self.index, BaseExpr):
             index = self.index.to_polars()
-        return expr.get(index=index, null_on_oob=self.null_on_oob)
+        else:  # pragma: no cover
+            raise NotImplementedError("IMPOSSIBLE TO REACH HERE!")
+        return expr.get(index=index, **rm_na(null_on_oob=self.null_on_oob))
 
 
 expr_enum_to_klass_mapping[ExprEnum.list_get.value] = ListGet

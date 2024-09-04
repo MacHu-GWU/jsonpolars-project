@@ -5,7 +5,7 @@ import dataclasses
 
 import polars as pl
 
-from ..sentinel import NOTHING, REQUIRED, OPTIONAL, resolve_kwargs
+from ..arg import REQ, NA, rm_na, T_KWARGS
 from ..base_expr import ExprEnum, BaseExpr, expr_enum_to_klass_mapping, parse_expr
 from ..utils_expr import to_jsonpolars_other_expr, to_polars_other_expr
 
@@ -27,14 +27,12 @@ class String(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.string.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
-            **resolve_kwargs(
-                expr=parse_expr(dct["expr"]),
-            )
+            expr=parse_expr(dct["expr"]),
         )
 
     def to_polars(self) -> pl.Expr:
@@ -51,22 +49,21 @@ class Split(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.str_split.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    by: str = dataclasses.field(default=REQUIRED)
-    inclusive: bool = dataclasses.field(default=False)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    by: str = dataclasses.field(default=REQ)
+    inclusive: bool = dataclasses.field(default=NA)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
-        return cls(
-            expr=parse_expr(dct["expr"]),
-            **resolve_kwargs(
-                by=dct.get("by", NOTHING),
-                inclusive=dct.get("inclusive", NOTHING),
-            ),
-        )
+    def from_dict(cls, dct: T_KWARGS):
+        req_kwargs, opt_kwargs = cls._split_req_opt(dct)
+        req_kwargs["expr"] = parse_expr(req_kwargs["expr"])
+        return cls(**req_kwargs, **rm_na(**opt_kwargs))
 
     def to_polars(self) -> pl.Expr:
-        return ensure_string(self.expr).split(by=self.by, inclusive=self.inclusive)
+        return ensure_string(self.expr).split(
+            by=self.by,
+            **rm_na(inclusive=self.inclusive),
+        )
 
 
 expr_enum_to_klass_mapping[ExprEnum.str_split.value] = Split
@@ -79,24 +76,22 @@ class StrJoin(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.str_join.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    delimiter: str = dataclasses.field(default="")
-    ignore_nulls: bool = dataclasses.field(default=True)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    delimiter: str = dataclasses.field(default=NA)
+    ignore_nulls: bool = dataclasses.field(default=NA)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
-        return cls(
-            expr=parse_expr(dct["expr"]),
-            **resolve_kwargs(
-                delimiter=dct.get("delimiter", NOTHING),
-                ignore_nulls=dct.get("ignore_nulls", NOTHING),
-            ),
-        )
+    def from_dict(cls, dct: T_KWARGS):
+        req_kwargs, opt_kwargs = cls._split_req_opt(dct)
+        req_kwargs["expr"] = parse_expr(req_kwargs["expr"])
+        return cls(**req_kwargs, **rm_na(**opt_kwargs))
 
     def to_polars(self) -> pl.Expr:
         return ensure_string(self.expr).join(
-            delimiter=self.delimiter,
-            ignore_nulls=self.ignore_nulls,
+            **rm_na(
+                delimiter=self.delimiter,
+                ignore_nulls=self.ignore_nulls,
+            )
         )
 
 
@@ -110,27 +105,25 @@ class StrContains(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.str_contains.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    pattern: T.Union[str, "T_EXPR"] = dataclasses.field(default=REQUIRED)
-    literal: bool = dataclasses.field(default=False)
-    strict: bool = dataclasses.field(default=True)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    pattern: T.Union[str, "T_EXPR"] = dataclasses.field(default=REQ)
+    literal: bool = dataclasses.field(default=NA)
+    strict: bool = dataclasses.field(default=NA)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
-        return cls(
-            expr=parse_expr(dct["expr"]),
-            pattern=to_jsonpolars_other_expr(dct["pattern"]),
-            **resolve_kwargs(
-                literal=dct.get("literal", NOTHING),
-                strict=dct.get("strict", NOTHING),
-            ),
-        )
+    def from_dict(cls, dct: T_KWARGS):
+        req_kwargs, opt_kwargs = cls._split_req_opt(dct)
+        req_kwargs["expr"] = parse_expr(req_kwargs["expr"])
+        req_kwargs["pattern"] = to_jsonpolars_other_expr(req_kwargs["pattern"])
+        return cls(**req_kwargs, **rm_na(**opt_kwargs))
 
     def to_polars(self) -> pl.Expr:
         return ensure_string(self.expr).contains(
             pattern=to_polars_other_expr(self.pattern),
-            literal=self.literal,
-            strict=self.strict,
+            **rm_na(
+                literal=self.literal,
+                strict=self.strict,
+            ),
         )
 
 
@@ -144,24 +137,22 @@ class StrDecode(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.str_decode.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    encoding: str = dataclasses.field(default=REQUIRED)
-    strict: bool = dataclasses.field(default=True)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    encoding: str = dataclasses.field(default=REQ)
+    strict: bool = dataclasses.field(default=NA)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
-        return cls(
-            expr=parse_expr(dct["expr"]),
-            encoding=dct["encoding"],
-            **resolve_kwargs(
-                strict=dct.get("strict", NOTHING),
-            ),
-        )
+    def from_dict(cls, dct: T_KWARGS):
+        req_kwargs, opt_kwargs = cls._split_req_opt(dct)
+        req_kwargs["expr"] = parse_expr(req_kwargs["expr"])
+        return cls(**req_kwargs, **rm_na(**opt_kwargs))
 
     def to_polars(self) -> pl.Expr:
         return ensure_string(self.expr).decode(
             encoding=self.encoding,
-            strict=self.strict,
+            **rm_na(
+                strict=self.strict,
+            ),
         )
 
 
@@ -175,11 +166,11 @@ class StrEncode(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.str_encode.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    encoding: str = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    encoding: str = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             expr=parse_expr(dct["expr"]),
             encoding=dct["encoding"],
@@ -199,11 +190,11 @@ class StrStartsWith(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.str_starts_with.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    prefix: T.Union[str, "T_EXPR"] = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    prefix: T.Union[str, "T_EXPR"] = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             expr=parse_expr(dct["expr"]),
             prefix=to_jsonpolars_other_expr(dct["prefix"]),
@@ -225,11 +216,11 @@ class StrEndsWith(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.str_ends_with.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    suffix: T.Union[str, "T_EXPR"] = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    suffix: T.Union[str, "T_EXPR"] = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             expr=parse_expr(dct["expr"]),
             suffix=to_jsonpolars_other_expr(dct["suffix"]),
@@ -251,39 +242,32 @@ class StrToDatetime(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.str_to_datetime.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    format: T.Optional[str] = dataclasses.field(default=None)
-    time_unit: T.Optional[str] = dataclasses.field(default=None)
-    time_zone: T.Optional[str] = dataclasses.field(default=None)
-    strict: bool = dataclasses.field(default=True)
-    exact: bool = dataclasses.field(default=True)
-    cache: bool = dataclasses.field(default=True)
-    ambiguous: str = dataclasses.field(default="raise")
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    format: T.Optional[str] = dataclasses.field(default=NA)
+    time_unit: T.Optional[str] = dataclasses.field(default=NA)
+    time_zone: T.Optional[str] = dataclasses.field(default=NA)
+    strict: bool = dataclasses.field(default=NA)
+    exact: bool = dataclasses.field(default=NA)
+    cache: bool = dataclasses.field(default=NA)
+    ambiguous: str = dataclasses.field(default=NA)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
-        return cls(
-            expr=parse_expr(dct["expr"]),
-            **resolve_kwargs(
-                format=dct.get("format", NOTHING),
-                time_unit=dct.get("time_unit", NOTHING),
-                time_zone=dct.get("time_zone", NOTHING),
-                strict=dct.get("strict", NOTHING),
-                exact=dct.get("exact", NOTHING),
-                cache=dct.get("cache", NOTHING),
-                ambiguous=dct.get("ambiguous", NOTHING),
-            ),
-        )
+    def from_dict(cls, dct: T_KWARGS):
+        req_kwargs, opt_kwargs = cls._split_req_opt(dct)
+        req_kwargs["expr"] = parse_expr(req_kwargs["expr"])
+        return cls(**req_kwargs, **rm_na(**opt_kwargs))
 
     def to_polars(self) -> pl.Expr:
         return ensure_string(self.expr).to_datetime(
-            format=self.format,
-            time_unit=self.time_unit,
-            time_zone=self.time_zone,
-            strict=self.strict,
-            exact=self.exact,
-            cache=self.cache,
-            ambiguous=self.ambiguous,
+            **rm_na(
+                format=self.format,
+                time_unit=self.time_unit,
+                time_zone=self.time_zone,
+                strict=self.strict,
+                exact=self.exact,
+                cache=self.cache,
+                ambiguous=self.ambiguous,
+            )
         )
 
 
@@ -297,30 +281,26 @@ class StrToDate(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.str_to_date.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    format: T.Optional[str] = dataclasses.field(default=None)
-    strict: bool = dataclasses.field(default=True)
-    exact: bool = dataclasses.field(default=True)
-    cache: bool = dataclasses.field(default=True)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    format: T.Optional[str] = dataclasses.field(default=NA)
+    strict: bool = dataclasses.field(default=NA)
+    exact: bool = dataclasses.field(default=NA)
+    cache: bool = dataclasses.field(default=NA)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
-        return cls(
-            expr=parse_expr(dct["expr"]),
-            **resolve_kwargs(
-                format=dct.get("format", NOTHING),
-                strict=dct.get("strict", NOTHING),
-                exact=dct.get("exact", NOTHING),
-                cache=dct.get("cache", NOTHING),
-            ),
-        )
+    def from_dict(cls, dct: T_KWARGS):
+        req_kwargs, opt_kwargs = cls._split_req_opt(dct)
+        req_kwargs["expr"] = parse_expr(req_kwargs["expr"])
+        return cls(**req_kwargs, **rm_na(**opt_kwargs))
 
     def to_polars(self) -> pl.Expr:
         return ensure_string(self.expr).to_date(
-            format=self.format,
-            strict=self.strict,
-            exact=self.exact,
-            cache=self.cache,
+            **rm_na(
+                format=self.format,
+                strict=self.strict,
+                exact=self.exact,
+                cache=self.cache,
+            )
         )
 
 
@@ -334,11 +314,11 @@ class StrZfill(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.str_zfill.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    length: int = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    length: int = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             expr=parse_expr(dct["expr"]),
             length=dct["length"],
@@ -358,24 +338,22 @@ class StrPadStart(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.str_pad_start.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    length: int = dataclasses.field(default=REQUIRED)
-    fill_char: str = dataclasses.field(default=" ")
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    length: int = dataclasses.field(default=REQ)
+    fill_char: str = dataclasses.field(default=NA)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
-        return cls(
-            expr=parse_expr(dct["expr"]),
-            length=dct["length"],
-            **resolve_kwargs(
-                fill_char=dct.get("fill_char", NOTHING),
-            ),
-        )
+    def from_dict(cls, dct: T_KWARGS):
+        req_kwargs, opt_kwargs = cls._split_req_opt(dct)
+        req_kwargs["expr"] = parse_expr(req_kwargs["expr"])
+        return cls(**req_kwargs, **rm_na(**opt_kwargs))
 
     def to_polars(self) -> pl.Expr:
         return ensure_string(self.expr).pad_start(
             length=self.length,
-            fill_char=self.fill_char,
+            **rm_na(
+                fill_char=self.fill_char,
+            ),
         )
 
 
@@ -389,24 +367,22 @@ class StrPadEnd(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.str_pad_end.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    length: int = dataclasses.field(default=REQUIRED)
-    fill_char: str = dataclasses.field(default=" ")
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    length: int = dataclasses.field(default=REQ)
+    fill_char: str = dataclasses.field(default=NA)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
-        return cls(
-            expr=parse_expr(dct["expr"]),
-            length=dct["length"],
-            **resolve_kwargs(
-                fill_char=dct.get("fill_char", NOTHING),
-            ),
-        )
+    def from_dict(cls, dct: T_KWARGS):
+        req_kwargs, opt_kwargs = cls._split_req_opt(dct)
+        req_kwargs["expr"] = parse_expr(req_kwargs["expr"])
+        return cls(**req_kwargs, **rm_na(**opt_kwargs))
 
     def to_polars(self) -> pl.Expr:
         return ensure_string(self.expr).pad_end(
             length=self.length,
-            fill_char=self.fill_char,
+            **rm_na(
+                fill_char=self.fill_char,
+            ),
         )
 
 
@@ -420,10 +396,10 @@ class StrToLowerCase(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.str_to_lowercase.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             expr=parse_expr(dct["expr"]),
         )
@@ -442,10 +418,10 @@ class StrToUpperCase(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.str_to_uppercase.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             expr=parse_expr(dct["expr"]),
         )
@@ -464,10 +440,10 @@ class StrToTitleCase(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.str_to_titlecase.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             expr=parse_expr(dct["expr"]),
         )
@@ -486,11 +462,11 @@ class StrHead(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.str_head.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    n: int = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    n: int = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             expr=parse_expr(dct["expr"]),
             n=dct["n"],
@@ -510,11 +486,11 @@ class StrTail(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.str_tail.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    n: int = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    n: int = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             expr=parse_expr(dct["expr"]),
             n=dct["n"],
@@ -534,12 +510,12 @@ class StrSlice(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.str_slice.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    offset: int = dataclasses.field(default=REQUIRED)
-    length: int = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    offset: int = dataclasses.field(default=REQ)
+    length: int = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             expr=parse_expr(dct["expr"]),
             offset=dct["offset"],
@@ -563,30 +539,28 @@ class StrReplace(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.str_replace.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    pattern: T.Union[str, "T_EXPR"] = dataclasses.field(default=REQUIRED)
-    value: T.Union[str, "T_EXPR"] = dataclasses.field(default=REQUIRED)
-    literal: bool = dataclasses.field(default=False)
-    n: int = dataclasses.field(default=1)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    pattern: T.Union[str, "T_EXPR"] = dataclasses.field(default=REQ)
+    value: T.Union[str, "T_EXPR"] = dataclasses.field(default=REQ)
+    literal: bool = dataclasses.field(default=NA)
+    n: int = dataclasses.field(default=NA)
 
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
-        return cls(
-            expr=parse_expr(dct["expr"]),
-            pattern=to_jsonpolars_other_expr(dct["pattern"]),
-            value=to_jsonpolars_other_expr(dct["value"]),
-            **resolve_kwargs(
-                literal=dct.get("literal", NOTHING),
-                n=dct.get("n", NOTHING),
-            ),
-        )
+        req_kwargs, opt_kwargs = cls._split_req_opt(dct)
+        req_kwargs["expr"] = parse_expr(req_kwargs["expr"])
+        req_kwargs["pattern"] = to_jsonpolars_other_expr(req_kwargs["pattern"])
+        req_kwargs["value"] = to_jsonpolars_other_expr(req_kwargs["value"])
+        return cls(**req_kwargs, **rm_na(**opt_kwargs))
 
     def to_polars(self) -> pl.Expr:
         return ensure_string(self.expr).replace(
             pattern=to_polars_other_expr(self.pattern),
             value=to_polars_other_expr(self.value),
-            literal=self.literal,
-            n=self.n,
+            **rm_na(
+                literal=self.literal,
+                n=self.n,
+            ),
         )
 
 
@@ -600,27 +574,26 @@ class StrReplaceAll(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.str_replace_all.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    pattern: T.Union[str, "T_EXPR"] = dataclasses.field(default=REQUIRED)
-    value: T.Union[str, "T_EXPR"] = dataclasses.field(default=REQUIRED)
-    literal: bool = dataclasses.field(default=False)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    pattern: T.Union[str, "T_EXPR"] = dataclasses.field(default=REQ)
+    value: T.Union[str, "T_EXPR"] = dataclasses.field(default=REQ)
+    literal: bool = dataclasses.field(default=NA)
 
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
-        return cls(
-            expr=parse_expr(dct["expr"]),
-            pattern=to_jsonpolars_other_expr(dct["pattern"]),
-            value=to_jsonpolars_other_expr(dct["value"]),
-            **resolve_kwargs(
-                literal=dct.get("literal", NOTHING),
-            ),
-        )
+        req_kwargs, opt_kwargs = cls._split_req_opt(dct)
+        req_kwargs["expr"] = parse_expr(req_kwargs["expr"])
+        req_kwargs["pattern"] = to_jsonpolars_other_expr(req_kwargs["pattern"])
+        req_kwargs["value"] = to_jsonpolars_other_expr(req_kwargs["value"])
+        return cls(**req_kwargs, **rm_na(**opt_kwargs))
 
     def to_polars(self) -> pl.Expr:
         return ensure_string(self.expr).replace_all(
             pattern=to_polars_other_expr(self.pattern),
             value=to_polars_other_expr(self.value),
-            literal=self.literal,
+            **rm_na(
+                literal=self.literal,
+            ),
         )
 
 

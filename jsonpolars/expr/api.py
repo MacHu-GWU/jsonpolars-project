@@ -63,11 +63,16 @@ from .string import StrReplaceAll
 from .function import Lit
 from .function import ConcatStr
 from .function import ConcatList
+from .function import FuncStruct
+from .function import Format
+from .function import FuncDate
+from .function import FuncDatetime
 from .column import Column
 from .column import Alias
 from .struct import Struct
 from .struct import StructField
 from .struct import StructRenameFields
+from .struct import FuncField
 from .struct import StructWithFields
 
 T_EXPR = T.Union[
@@ -133,10 +138,15 @@ T_EXPR = T.Union[
     Lit,
     ConcatStr,
     ConcatList,
+    FuncStruct,
+    Format,
+    FuncDate,
+    FuncDatetime,
     Column,
     Alias,
     Struct,
     StructField,
     StructRenameFields,
+    FuncField,
     StructWithFields,
 ]

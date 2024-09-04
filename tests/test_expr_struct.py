@@ -3,7 +3,15 @@
 from jsonpolars.expr import api as expr
 from jsonpolars.tests.expr_case import Case
 
-data = {"id": 1, "name": "Alice", "profile": {"ssn": "1234567890"}}
+
+data = {
+    "id": 1,
+    "name": "Alice",
+    "profile": {
+        "ssn": "1234567890",
+        "passport": "E1234567",
+    },
+}
 case_field_1 = Case(
     input_records=[
         {"data": data},
@@ -42,10 +50,51 @@ case_field_3 = Case(
     ],
     expr=expr.StructField(
         expr=expr.Column(name="data"),
+        name="*",
+    ),
+    expected_output_records=[
+        {
+            "data": data,
+            "id": 1,
+            "name": "Alice",
+            "profile": {
+                "ssn": "1234567890",
+                "passport": "E1234567",
+            },
+        },
+    ],
+)
+case_field_4 = Case(
+    input_records=[
+        {"data": data},
+    ],
+    expr=expr.StructField(
+        expr=expr.Column(name="data"),
         name=["id", "name"],
     ),
     expected_output_records=[
-        {"data": data, "id": 1, "name": "Alice"},
+        {
+            "data": data,
+            "id": 1,
+            "name": "Alice",
+        },
+    ],
+)
+case_field_5 = Case(
+    input_records=[
+        {"data": data},
+    ],
+    expr=expr.StructField(
+        expr=expr.Column(name="data"),
+        name="id",
+        more_names=["name"],
+    ),
+    expected_output_records=[
+        {
+            "data": data,
+            "id": 1,
+            "name": "Alice",
+        },
     ],
 )
 case_rename_fields_1 = Case(
@@ -84,15 +133,15 @@ case_with_fields = Case(
             expr.Alias(
                 name="c",
                 expr=expr.Plus(
-                    left=expr.StructField(expr=None, name="a"),
-                    right=expr.StructField(expr=None, name="b"),
+                    left=expr.StructField(name="a"),
+                    right=expr.StructField(name="b"),
                 ),
             )
         ],
         named_exprs={
             "d": expr.Multiply(
-                left=expr.StructField(expr=None, name="a"),
-                right=expr.StructField(expr=None, name="b"),
+                left=expr.StructField(name="a"),
+                right=expr.StructField(name="b"),
             )
         },
     ),
@@ -108,6 +157,8 @@ def test():
     case_field_1.run_with_columns_test()
     case_field_2.run_with_columns_test()
     case_field_3.run_with_columns_test()
+    case_field_4.run_with_columns_test()
+    case_field_5.run_with_columns_test()
     case_rename_fields_1.run_with_columns_test()
     case_rename_fields_2.run_with_columns_test()
     case_with_fields.run_with_columns_test()

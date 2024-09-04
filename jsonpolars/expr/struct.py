@@ -5,7 +5,7 @@ import dataclasses
 
 import polars as pl
 
-from ..sentinel import NOTHING, REQUIRED, OPTIONAL
+from ..arg import REQ, NA, rm_na, T_KWARGS
 from ..base_expr import ExprEnum, BaseExpr, expr_enum_to_klass_mapping, parse_expr
 from ..utils_expr import (
     batch_to_jsonpolars_into_exprs,
@@ -35,10 +35,10 @@ class Struct(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.struct.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             expr=parse_expr(dct["expr"]),
         )
@@ -58,11 +58,15 @@ class StructField(BaseExpr):
 
     type: str = dataclasses.field(default=ExprEnum.struct_field.value)
     expr: T.Optional["T_EXPR"] = dataclasses.field(default=None)
-    name: T.Union[str, T.List[str]] = dataclasses.field(default=REQUIRED)
+    name: T.Union[str, T.List[str]] = dataclasses.field(default=REQ)
+    more_names: T.List[str] = dataclasses.field(default_factory=list)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
-        kwargs = dict(name=dct["name"])
+    def from_dict(cls, dct: T_KWARGS):
+        kwargs = dict(
+            name=dct["name"],
+            more_names=dct.get("more_names", []),
+        )
         expr = dct["expr"]
         if expr is not None:
             kwargs["expr"] = to_jsonpolars_other_expr(dct["expr"])
@@ -71,7 +75,7 @@ class StructField(BaseExpr):
     def to_polars(self) -> pl.Expr:
         if self.expr is None:
             if isinstance(self.name, str):
-                return pl.field(self.name)
+                return pl.field(self.name, *self.more_names)
             else:  # pragma: no cover
                 raise TypeError("name must be a string if expr is None")
         else:
@@ -82,7 +86,7 @@ class StructField(BaseExpr):
         else:
             name = self.name
 
-        return expr.field(*name)
+        return expr.field(name, *self.more_names)
 
 
 expr_enum_to_klass_mapping[ExprEnum.struct_field.value] = StructField
@@ -95,11 +99,11 @@ class StructRenameFields(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.struct_rename_fields.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    names: T.List[str] = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    names: T.List[str] = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             expr=parse_expr(dct["expr"]),
             names=dct["names"],
@@ -113,22 +117,46 @@ expr_enum_to_klass_mapping[ExprEnum.struct_rename_fields.value] = StructRenameFi
 
 
 @dataclasses.dataclass
+class FuncField(BaseExpr):
+    """
+    Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.struct.field.html
+    """
+
+    type: str = dataclasses.field(default=ExprEnum.func_field.value)
+    name: str = dataclasses.field(default_factory=REQ)
+
+    @classmethod
+    def from_dict(cls, dct: T_KWARGS):
+        return cls(
+            name=dct["name"],
+        )
+
+    def to_polars(self) -> pl.Expr:
+        return pl.field(self.name)
+
+
+expr_enum_to_klass_mapping[ExprEnum.func_field.value] = FuncField
+
+
+@dataclasses.dataclass
 class StructWithFields(BaseExpr):
     """
     Ref: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.struct.with_fields.html
     """
 
     type: str = dataclasses.field(default=ExprEnum.struct_with_fields.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
     exprs: T.List["IntoExpr"] = dataclasses.field(default_factory=list)
     named_exprs: T.Dict[str, "IntoExpr"] = dataclasses.field(default_factory=dict)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             expr=parse_expr(dct["expr"]),
             exprs=batch_to_jsonpolars_into_exprs(dct.get("exprs", list())),
-            named_exprs=batch_to_jsonpolars_named_into_exprs(dct.get("named_exprs", dict())),
+            named_exprs=batch_to_jsonpolars_named_into_exprs(
+                dct.get("named_exprs", dict())
+            ),
         )
 
     def to_polars(self) -> pl.Expr:

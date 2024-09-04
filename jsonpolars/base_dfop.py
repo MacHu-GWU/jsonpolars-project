@@ -8,8 +8,12 @@ import typing as T
 import enum
 import dataclasses
 
-from .vendor.better_dataclasses import DataClass
+import polars as pl
+from .model import BaseModel
+from .base_expr import BaseExpr
 
+from .exc import ParamError
+from .arg import _REQUIRED, REQ, rm_na, T_KWARGS
 from .sentinel import NOTHING, REQUIRED, OPTIONAL
 
 if T.TYPE_CHECKING:  # pragma: no cover
@@ -128,17 +132,55 @@ class DfopEnum(str, enum.Enum):
     # Style
 
 
+def to_dict(inst) -> "T_KWARGS":
+    """
+    Convert an instance of ``BaseExpr`` to a dict. This dict can be used in
+    ``BaseExpr.from_dict`` method to create a identical instance of the original
+    ``BaseExpr`` instance.
+    """
+    if isinstance(inst, BaseExpr):
+        return inst.to_dict()
+    elif isinstance(inst, (tuple, list)):
+        return type(inst)([to_dict(v) for v in inst])
+    elif isinstance(inst, dict):
+        kwargs = {k: to_dict(v) for k, v in inst.items()}
+        return rm_na(**kwargs)
+    else:
+        return inst
+
+
 @dataclasses.dataclass
-class BaseDfop(DataClass):
-    type: str = dataclasses.field(default=REQUIRED)
+class BaseDfop(BaseModel):
+    type: str = dataclasses.field(default=REQ)
 
     def _validate(self):
-        for k, v in dataclasses.asdict(self).items():
-            if v is REQUIRED:  # pragma: no cover
-                raise ValueError(f"Field {k!r} is required for {self.__class__}.")
+        for field in dataclasses.fields(self.__class__):
+            if field.init:
+                k = field.name
+                if getattr(self, k) is REQ:  # pragma: no cover
+                    raise ParamError(f"Field {k!r} is required for {self.__class__}.")
 
     def __post_init__(self):
         self._validate()
+
+    def to_dict(self) -> T_KWARGS:
+        kwargs = dict()
+        for field in dataclasses.fields(self.__class__):
+            value = getattr(self, field.name)
+            kwargs[field.name] = to_dict(value)
+        return rm_na(**kwargs)
+
+    @classmethod
+    def from_dict(cls, dct: T_KWARGS):
+        """
+        Create an instance of ``BaseExpr`` from either a human created dict,
+        or a dict created by the ``BaseExpr.to_dict`` method.
+        """
+        req_kwargs, opt_kwargs = cls._split_req_opt(dct)
+        return cls(**req_kwargs, **rm_na(**opt_kwargs))
+
+    def to_polars(self, df: pl.DataFrame) -> pl.DataFrame:
+        raise NotImplementedError()
 
 
 dfop_enum_to_klass_mapping: T.Dict[str, T.Type["T_DFOP"]] = dict()

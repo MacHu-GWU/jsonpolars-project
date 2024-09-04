@@ -6,7 +6,7 @@ from datetime import timedelta
 
 import polars as pl
 
-from ..sentinel import NOTHING, REQUIRED, OPTIONAL, resolve_kwargs
+from ..arg import REQ, NA, rm_na, T_KWARGS
 from ..base_expr import ExprEnum, BaseExpr, expr_enum_to_klass_mapping, parse_expr
 from ..utils_expr import to_jsonpolars_other_expr
 
@@ -29,10 +29,10 @@ class Datetime(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(expr=parse_expr(dct["expr"]))
 
     def to_polars(self) -> pl.Expr:
@@ -49,11 +49,11 @@ class DtToString(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_to_string.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    format: str = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    format: str = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             expr=parse_expr(dct["expr"]),
             format=dct["format"],
@@ -73,10 +73,10 @@ class DtYear(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_year.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(expr=parse_expr(dct["expr"]))
 
     def to_polars(self) -> pl.Expr:
@@ -93,10 +93,10 @@ class DtQuarter(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_quarter.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(expr=parse_expr(dct["expr"]))
 
     def to_polars(self) -> pl.Expr:
@@ -113,10 +113,10 @@ class DtMonth(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_month.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: REQ):
         return cls(expr=parse_expr(dct["expr"]))
 
     def to_polars(self) -> pl.Expr:
@@ -133,10 +133,10 @@ class DtDay(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_day.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: REQ):
         return cls(expr=parse_expr(dct["expr"]))
 
     def to_polars(self) -> pl.Expr:
@@ -153,10 +153,10 @@ class DtHour(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_hour.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: REQ):
         return cls(expr=parse_expr(dct["expr"]))
 
     def to_polars(self) -> pl.Expr:
@@ -173,10 +173,10 @@ class DtMinute(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_minute.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: REQ):
         return cls(expr=parse_expr(dct["expr"]))
 
     def to_polars(self) -> pl.Expr:
@@ -193,10 +193,10 @@ class DtSecond(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_second.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: REQ):
         return cls(expr=parse_expr(dct["expr"]))
 
     def to_polars(self) -> pl.Expr:
@@ -213,10 +213,10 @@ class DtNanoSecond(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_nanosecond.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(expr=parse_expr(dct["expr"]))
 
     def to_polars(self) -> pl.Expr:
@@ -233,20 +233,17 @@ class DtEpoch(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_epoch.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    time_unit: str = dataclasses.field(default="us")
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    time_unit: str = dataclasses.field(default=NA)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
-        return cls(
-            expr=parse_expr(dct["expr"]),
-            **resolve_kwargs(
-                time_unit=dct.get("time_unit", NOTHING),
-            ),
-        )
+    def from_dict(cls, dct: T_KWARGS):
+        req_kwargs, opt_kwargs = cls._split_req_opt(dct)
+        req_kwargs["expr"] = parse_expr(req_kwargs["expr"])
+        return cls(**req_kwargs, **rm_na(**opt_kwargs))
 
     def to_polars(self) -> pl.Expr:
-        return ensure_datetime(self.expr).epoch(time_unit=self.time_unit)
+        return ensure_datetime(self.expr).epoch(**rm_na(time_unit=self.time_unit))
 
 
 expr_enum_to_klass_mapping[ExprEnum.dt_epoch.value] = DtEpoch
@@ -259,20 +256,17 @@ class DtTimestamp(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_timestamp.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    time_unit: str = dataclasses.field(default="us")
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    time_unit: str = dataclasses.field(default=NA)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
-        return cls(
-            expr=parse_expr(dct["expr"]),
-            **resolve_kwargs(
-                time_unit=dct.get("time_unit", NOTHING),
-            ),
-        )
+    def from_dict(cls, dct: T_KWARGS):
+        req_kwargs, opt_kwargs = cls._split_req_opt(dct)
+        req_kwargs["expr"] = parse_expr(req_kwargs["expr"])
+        return cls(**req_kwargs, **rm_na(**opt_kwargs))
 
     def to_polars(self) -> pl.Expr:
-        return ensure_datetime(self.expr).timestamp(time_unit=self.time_unit)
+        return ensure_datetime(self.expr).timestamp(**rm_na(time_unit=self.time_unit))
 
 
 expr_enum_to_klass_mapping[ExprEnum.dt_timestamp.value] = DtTimestamp
@@ -285,10 +279,10 @@ class DtTotalDays(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_total_days.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(expr=parse_expr(dct["expr"]))
 
     def to_polars(self) -> pl.Expr:
@@ -305,10 +299,10 @@ class DtTotalHours(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_total_hours.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(expr=parse_expr(dct["expr"]))
 
     def to_polars(self) -> pl.Expr:
@@ -325,10 +319,10 @@ class DtTotalMinutes(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_total_minutes.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(expr=parse_expr(dct["expr"]))
 
     def to_polars(self) -> pl.Expr:
@@ -345,10 +339,10 @@ class DtTotalSeconds(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_total_seconds.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(expr=parse_expr(dct["expr"]))
 
     def to_polars(self) -> pl.Expr:
@@ -365,10 +359,10 @@ class DtTotalMilliSeconds(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_total_milliseconds.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(expr=parse_expr(dct["expr"]))
 
     def to_polars(self) -> pl.Expr:
@@ -385,10 +379,10 @@ class DtTotalMicroSeconds(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_total_microseconds.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(expr=parse_expr(dct["expr"]))
 
     def to_polars(self) -> pl.Expr:
@@ -405,10 +399,10 @@ class DtTotalNanoSeconds(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_total_nanoseconds.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(expr=parse_expr(dct["expr"]))
 
     def to_polars(self) -> pl.Expr:
@@ -425,11 +419,11 @@ class DtTruncate(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.dt_truncate.value)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
-    every: T.Union[str, timedelta, "T_EXPR"] = dataclasses.field(default=REQUIRED)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
+    every: T.Union[str, timedelta, "T_EXPR"] = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             expr=parse_expr(dct["expr"]),
             every=to_jsonpolars_other_expr(dct["every"]),

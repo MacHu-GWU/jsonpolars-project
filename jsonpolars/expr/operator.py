@@ -5,7 +5,7 @@ import dataclasses
 
 import polars as pl
 
-from ..sentinel import NOTHING, REQUIRED, OPTIONAL
+from ..arg import REQ, NA, rm_na, T_KWARGS
 from ..base_expr import ExprEnum, BaseExpr, expr_enum_to_klass_mapping, parse_expr
 from ..utils_expr import to_jsonpolars_other_expr
 
@@ -40,11 +40,11 @@ class Plus(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.add.value)
-    left: "OtherExpr" = dataclasses.field(default=REQUIRED)
-    right: "OtherExpr" = dataclasses.field(default=REQUIRED)
+    left: "OtherExpr" = dataclasses.field(default=REQ)
+    right: "OtherExpr" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             left=to_jsonpolars_other_expr(dct["left"]),
             right=to_jsonpolars_other_expr(dct["right"]),
@@ -64,11 +64,11 @@ class Minus(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.sub.value)
-    left: "OtherExpr" = dataclasses.field(default=REQUIRED)
-    right: "OtherExpr" = dataclasses.field(default=REQUIRED)
+    left: "OtherExpr" = dataclasses.field(default=REQ)
+    right: "OtherExpr" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             left=to_jsonpolars_other_expr(dct["left"]),
             right=to_jsonpolars_other_expr(dct["right"]),
@@ -88,11 +88,11 @@ class Multiply(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.mul.value)
-    left: "OtherExpr" = dataclasses.field(default=REQUIRED)
-    right: "OtherExpr" = dataclasses.field(default=REQUIRED)
+    left: "OtherExpr" = dataclasses.field(default=REQ)
+    right: "OtherExpr" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             left=to_jsonpolars_other_expr(dct["left"]),
             right=to_jsonpolars_other_expr(dct["right"]),
@@ -112,11 +112,11 @@ class TrueDiv(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.truediv.value)
-    left: "OtherExpr" = dataclasses.field(default=REQUIRED)
-    right: "OtherExpr" = dataclasses.field(default=REQUIRED)
+    left: "OtherExpr" = dataclasses.field(default=REQ)
+    right: "OtherExpr" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             left=to_jsonpolars_other_expr(dct["left"]),
             right=to_jsonpolars_other_expr(dct["right"]),
@@ -136,11 +136,11 @@ class FloorDiv(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.floordiv.value)
-    left: "OtherExpr" = dataclasses.field(default=REQUIRED)
-    right: "OtherExpr" = dataclasses.field(default=REQUIRED)
+    left: "OtherExpr" = dataclasses.field(default=REQ)
+    right: "OtherExpr" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             left=to_jsonpolars_other_expr(dct["left"]),
             right=to_jsonpolars_other_expr(dct["right"]),
@@ -160,10 +160,10 @@ class Negative(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.neg.value)
-    expr: "OtherExpr" = dataclasses.field(default=REQUIRED)
+    expr: "OtherExpr" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             expr=to_jsonpolars_other_expr(dct["expr"]),
         )
@@ -182,11 +182,11 @@ class Pow(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.pow.value)
-    left: "OtherExpr" = dataclasses.field(default=REQUIRED)
-    right: "OtherExpr" = dataclasses.field(default=REQUIRED)
+    left: "OtherExpr" = dataclasses.field(default=REQ)
+    right: "OtherExpr" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             left=to_jsonpolars_other_expr(dct["left"]),
             right=to_jsonpolars_other_expr(dct["right"]),
@@ -206,11 +206,11 @@ class Equal(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.eq.value)
-    left: "OtherExpr" = dataclasses.field(default=REQUIRED)
-    right: "OtherExpr" = dataclasses.field(default=REQUIRED)
+    left: "OtherExpr" = dataclasses.field(default=REQ)
+    right: "OtherExpr" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             left=to_jsonpolars_other_expr(dct["left"]),
             right=to_jsonpolars_other_expr(dct["right"]),
@@ -230,11 +230,11 @@ class NotEqual(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.ne.value)
-    left: "OtherExpr" = dataclasses.field(default=REQUIRED)
-    right: "OtherExpr" = dataclasses.field(default=REQUIRED)
+    left: "OtherExpr" = dataclasses.field(default=REQ)
+    right: "OtherExpr" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             left=to_jsonpolars_other_expr(dct["left"]),
             right=to_jsonpolars_other_expr(dct["right"]),
@@ -254,11 +254,11 @@ class GreatThan(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.gt.value)
-    left: "OtherExpr" = dataclasses.field(default=REQUIRED)
-    right: "OtherExpr" = dataclasses.field(default=REQUIRED)
+    left: "OtherExpr" = dataclasses.field(default=REQ)
+    right: "OtherExpr" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             left=to_jsonpolars_other_expr(dct["left"]),
             right=to_jsonpolars_other_expr(dct["right"]),
@@ -278,11 +278,11 @@ class GreatThanOrEqual(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.ge.value)
-    left: "OtherExpr" = dataclasses.field(default=REQUIRED)
-    right: "OtherExpr" = dataclasses.field(default=REQUIRED)
+    left: "OtherExpr" = dataclasses.field(default=REQ)
+    right: "OtherExpr" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             left=to_jsonpolars_other_expr(dct["left"]),
             right=to_jsonpolars_other_expr(dct["right"]),
@@ -302,11 +302,11 @@ class LessThan(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.lt.value)
-    left: "OtherExpr" = dataclasses.field(default=REQUIRED)
-    right: "OtherExpr" = dataclasses.field(default=REQUIRED)
+    left: "OtherExpr" = dataclasses.field(default=REQ)
+    right: "OtherExpr" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             left=to_jsonpolars_other_expr(dct["left"]),
             right=to_jsonpolars_other_expr(dct["right"]),
@@ -326,11 +326,11 @@ class LessThanOrEqual(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.le.value)
-    left: "OtherExpr" = dataclasses.field(default=REQUIRED)
-    right: "OtherExpr" = dataclasses.field(default=REQUIRED)
+    left: "OtherExpr" = dataclasses.field(default=REQ)
+    right: "OtherExpr" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             left=to_jsonpolars_other_expr(dct["left"]),
             right=to_jsonpolars_other_expr(dct["right"]),
@@ -350,11 +350,11 @@ class LogicalAnd(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.and_.value)
-    left: "OtherExpr" = dataclasses.field(default=REQUIRED)
-    right: "OtherExpr" = dataclasses.field(default=REQUIRED)
+    left: "OtherExpr" = dataclasses.field(default=REQ)
+    right: "OtherExpr" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             left=to_jsonpolars_other_expr(dct["left"]),
             right=to_jsonpolars_other_expr(dct["right"]),
@@ -374,11 +374,11 @@ class LogicalOr(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.or_.value)
-    left: "OtherExpr" = dataclasses.field(default=REQUIRED)
-    right: "OtherExpr" = dataclasses.field(default=REQUIRED)
+    left: "OtherExpr" = dataclasses.field(default=REQ)
+    right: "OtherExpr" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             left=to_jsonpolars_other_expr(dct["left"]),
             right=to_jsonpolars_other_expr(dct["right"]),

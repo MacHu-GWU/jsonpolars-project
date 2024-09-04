@@ -5,7 +5,7 @@ import dataclasses
 
 import polars as pl
 
-from ..sentinel import NOTHING, REQUIRED, OPTIONAL, resolve_kwargs
+from ..arg import REQ, NA, rm_na, T_KWARGS
 from ..utils_expr import (
     batch_to_jsonpolars_into_exprs,
     batch_to_jsonpolars_named_into_exprs,
@@ -31,7 +31,7 @@ class Select(BaseDfop):
     named_exprs: T.Dict[str, "IntoExpr"] = dataclasses.field(default_factory=dict)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             exprs=batch_to_jsonpolars_into_exprs(dct.get("exprs", list())),
             named_exprs=batch_to_jsonpolars_named_into_exprs(
@@ -57,14 +57,8 @@ class Rename(BaseDfop):
 
     type: str = dataclasses.field(default=DfopEnum.rename.value)
     mapping: T.Union[T.Dict[str, str], T.Callable[[str], str]] = dataclasses.field(
-        default=REQUIRED
+        default=REQ
     )
-
-    @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
-        return cls(
-            mapping=dct["mapping"],
-        )
 
     def to_polars(self, df: pl.DataFrame) -> pl.DataFrame:
         return df.rename(self.mapping)
@@ -80,22 +74,24 @@ class Drop(BaseDfop):
     """
 
     type: str = dataclasses.field(default=DfopEnum.drop.value)
-    columns: T.List["ColumnNameOrSelector"] = dataclasses.field(default=REQUIRED)
-    strict: bool = dataclasses.field(default=True)
+    columns: T.List["ColumnNameOrSelector"] = dataclasses.field(default=REQ)
+    strict: bool = dataclasses.field(default=NA)
 
     @classmethod
     def from_dict(cls, dct: T.Dict[str, T.Any]):
         return cls(
             columns=batch_to_jsonpolars_into_exprs(dct["columns"]),
-            **resolve_kwargs(
-                strict=dct.get("strict", NOTHING),
+            **rm_na(
+                strict=dct.get("strict", NA),
             ),
         )
 
     def to_polars(self, df: pl.DataFrame) -> pl.DataFrame:
         return df.drop(
             *batch_to_polars_into_exprs(self.columns),
-            strict=self.strict,
+            **rm_na(
+                strict=self.strict,
+            ),
         )
 
 
@@ -113,7 +109,7 @@ class WithColumns(BaseDfop):
     named_exprs: T.Dict[str, "IntoExpr"] = dataclasses.field(default_factory=dict)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             exprs=batch_to_jsonpolars_into_exprs(dct.get("exprs", list())),
             named_exprs=batch_to_jsonpolars_named_into_exprs(
@@ -138,18 +134,10 @@ class Head(BaseDfop):
     """
 
     type: str = dataclasses.field(default=DfopEnum.head.value)
-    n: int = dataclasses.field(default=5)
-
-    @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
-        return cls(
-            **resolve_kwargs(
-                n=dct.get("n", NOTHING),
-            ),
-        )
+    n: int = dataclasses.field(default=NA)
 
     def to_polars(self, df: pl.DataFrame) -> pl.DataFrame:
-        return df.head(self.n)
+        return df.head(**rm_na(n=self.n))
 
 
 dfop_enum_to_klass_mapping[DfopEnum.head.value] = Head
@@ -162,18 +150,10 @@ class Tail(BaseDfop):
     """
 
     type: str = dataclasses.field(default=DfopEnum.tail.value)
-    n: int = dataclasses.field(default=5)
-
-    @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
-        return cls(
-            **resolve_kwargs(
-                n=dct.get("n", NOTHING),
-            ),
-        )
+    n: int = dataclasses.field(default=NA)
 
     def to_polars(self, df: pl.DataFrame) -> pl.DataFrame:
-        return df.tail(self.n)
+        return df.tail(**rm_na(n=self.n))
 
 
 dfop_enum_to_klass_mapping[DfopEnum.tail.value] = Tail
@@ -186,31 +166,29 @@ class Sort(BaseDfop):
     """
 
     type: str = dataclasses.field(default=DfopEnum.sort.value)
-    by: T.List["IntoExpr"] = dataclasses.field(default=REQUIRED)
-    descending: T.Union[bool, T.List[bool]] = dataclasses.field(default=False)
-    nulls_last: T.Union[bool, T.List[bool]] = dataclasses.field(default=False)
-    multithreaded: bool = dataclasses.field(default=True)
-    maintain_order: bool = dataclasses.field(default=False)
+    by: T.List["IntoExpr"] = dataclasses.field(default=REQ)
+    descending: T.Union[bool, T.List[bool]] = dataclasses.field(default=NA)
+    nulls_last: T.Union[bool, T.List[bool]] = dataclasses.field(default=NA)
+    multithreaded: bool = dataclasses.field(default=NA)
+    maintain_order: bool = dataclasses.field(default=NA)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
-        return cls(
-            by=batch_to_jsonpolars_into_exprs(dct["by"]),
-            **resolve_kwargs(
-                descending=dct.get("descending", NOTHING),
-                nulls_last=dct.get("nulls_last", NOTHING),
-                multithreaded=dct.get("multithreaded", NOTHING),
-                maintain_order=dct.get("maintain_order", NOTHING),
-            ),
+    def from_dict(cls, dct: T_KWARGS):
+        req_kwargs, opt_kwargs = cls._split_req_opt(dct)
+        req_kwargs["by"] = batch_to_jsonpolars_into_exprs(
+            batch_to_jsonpolars_into_exprs(dct["by"])
         )
+        return cls(**req_kwargs, **rm_na(**opt_kwargs))
 
     def to_polars(self, df: pl.DataFrame) -> pl.DataFrame:
         return df.sort(
             *batch_to_polars_into_exprs(self.by),
-            descending=self.descending,
-            nulls_last=self.nulls_last,
-            multithreaded=self.multithreaded,
-            maintain_order=self.maintain_order,
+            **rm_na(
+                descending=self.descending,
+                nulls_last=self.nulls_last,
+                multithreaded=self.multithreaded,
+                maintain_order=self.maintain_order,
+            ),
         )
 
 
@@ -224,22 +202,20 @@ class DropNulls(BaseDfop):
     """
 
     type: str = dataclasses.field(default=DfopEnum.drop_nulls.value)
-    subset: T.List["ColumnNameOrSelector"] = dataclasses.field(default=None)
+    subset: T.List["ColumnNameOrSelector"] = dataclasses.field(default=NA)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
-        if dct.get("subset") is None:
-            subset = None
-        else:
-            subset = batch_to_jsonpolars_into_exprs(dct["subset"])
-        return cls(subset=subset)
+    def from_dict(cls, dct: T_KWARGS):
+        req_kwargs, opt_kwargs = cls._split_req_opt(dct)
+        if "subset" in opt_kwargs:
+            opt_kwargs["subset"] = batch_to_jsonpolars_into_exprs(opt_kwargs["subset"])
+        return cls(**req_kwargs, **rm_na(**opt_kwargs))
 
     def to_polars(self, df: pl.DataFrame) -> pl.DataFrame:
-        if self.subset is None:
-            subset = None
-        else:
-            subset = batch_to_polars_into_exprs(self.subset)
-        return df.drop_nulls(subset=subset)
+        kwargs = dict()
+        if isinstance(self.subset, list):
+            kwargs["subset"] = batch_to_polars_into_exprs(self.subset)
+        return df.drop_nulls(**kwargs)
 
 
 dfop_enum_to_klass_mapping[DfopEnum.drop_nulls.value] = DropNulls

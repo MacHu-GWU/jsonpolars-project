@@ -106,74 +106,98 @@ case_concat_list = Case(
 case_func_struct_1 = Case(
     input_records=[
         {
-            "id": 1,
-            "profile": {
-                "name": "Alice",
-                "address": {
-                    "street": "123 Main St",
-                    "zipcode": "12345",
-                },
-            },
+            "a": 1,
+            "b": 2,
+            "c": 3,
         },
     ],
     expr=expr.Alias(
         expr=expr.FuncStruct(
-            named_exprs={
-                "address": expr.FuncStruct(
-                    named_exprs={
-                        "street": expr.StructField(
-                            expr=expr.StructField(
-                                expr=expr.Column(name="profile"),
-                                name="address",
-                            ),
-                            name="street",
-                        ),
-                    },
-                ),
-            },
+            exprs=["a", "b"],
         ),
-        name="profile",
+        name="data",
     ),
     expected_output_records=[
-        {"id": 1, "profile": {"address": {"street": "123 Main St"}}},
+        {"a": 1, "b": 2, "c": 3, "data": {"a": 1, "b": 2}},
     ],
 )
 case_func_struct_2 = Case(
     input_records=[
         {
-            "id": 1,
-            "profile": {
-                "name": "Alice",
-                "address": {
-                    "street": "123 Main St",
-                    "zipcode": "12345",
-                },
-            },
+            "a": 1,
+            "b": 2,
+            "c": 3,
         },
     ],
     expr=expr.Alias(
         expr=expr.FuncStruct(
-            named_exprs={
-                "address": expr.FuncStruct(
-                    named_exprs={
-                        "street": expr.StructField(
-                            expr=expr.StructField(
-                                expr=expr.Column(name="profile"),
-                                name="address",
-                            ),
-                            name="street",
-                        ),
-                    },
-                ),
-            },
-            schema={
-                "address": Struct(fields={"street": String()}).to_dict(),
-            },
+            exprs=[
+                expr.Alias(expr=expr.Column(name="a"), name="x"),
+                expr.Alias(expr=expr.Column(name="b"), name="y"),
+            ],
         ),
-        name="profile",
+        name="data",
     ),
     expected_output_records=[
-        {"id": 1, "profile": {"address": {"street": "123 Main St"}}},
+        {"a": 1, "b": 2, "c": 3, "data": {"x": 1, "y": 2}},
+    ],
+)
+case_func_struct_3 = Case(
+    input_records=[
+        {
+            "a": 1,
+            "b": 2,
+            "c": 3,
+        },
+    ],
+    expr=expr.Alias(
+        expr=expr.FuncStruct(
+            named_exprs=dict(
+                x=expr.Column(name="a"),
+                y=expr.Column(name="b"),
+            ),
+        ),
+        name="data",
+    ),
+    expected_output_records=[
+        {"a": 1, "b": 2, "c": 3, "data": {"x": 1, "y": 2}},
+    ],
+)
+case_func_struct_4 = Case(
+    input_records=[
+        {"data": {"a": 1, "b": 2, "c": 3}},
+    ],
+    expr=expr.Alias(
+        expr=expr.FuncStruct(
+            named_exprs=dict(
+                x=expr.StructField(expr=expr.Column(name="data"), name="a"),
+                y=expr.StructField(expr=expr.Column(name="data"), name="b"),
+            ),
+        ),
+        name="res",
+    ),
+    expected_output_records=[
+        {"data": {"a": 1, "b": 2, "c": 3}, "res": {"x": 1, "y": 2}},
+    ],
+)
+case_func_struct_5 = Case(
+    input_records=[
+        {"data": {"a": 1, "b": 2, "c": 3}},
+    ],
+    expr=expr.Alias(
+        expr=expr.FuncStruct(
+            exprs=[
+                expr.StructField(
+                    expr=expr.Column(name="data"),
+                    name="a",
+                    more_names=["b"],
+                )
+            ]
+        ),
+        name="res",
+    ),
+    expected_output_records=[
+        {"data": {"a": 1, "b": 2, "c": 3}, "res": {"a": 1, "b": 2}},
     ],
 )
 case_format = Case(
@@ -255,6 +279,9 @@ def test():
     case_concat_list.run_with_columns_test()
     case_func_struct_1.run_with_columns_test()
     case_func_struct_2.run_with_columns_test()
+    case_func_struct_3.run_with_columns_test()
+    case_func_struct_4.run_with_columns_test()
+    case_func_struct_5.run_with_columns_test()
     case_format.run_with_columns_test()
     case_date_1.run_with_columns_test()
     case_date_2.run_with_columns_test()

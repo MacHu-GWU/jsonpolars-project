@@ -7,9 +7,9 @@ import dataclasses
 import polars as pl
 from .vendor.better_dataclasses import DataClass, T_DATA
 
-from .sentinel import NOTHING, REQUIRED, resolve_kwargs
-from .arg import _REQUIRED, REQ, _NOTHING, NA, rm_na, T_KWARGS
+from .arg import _REQUIRED, REQ, rm_na, T_KWARGS
 from .exc import ParamError
+from .model import BaseModel
 
 if T.TYPE_CHECKING:  # pragma: no cover
     from .expr.api import T_EXPR
@@ -327,6 +327,7 @@ class ExprEnum(str, enum.Enum):
     str_zfill = "str_zfill"
     # Struct
     struct = "struct"
+    func_field = "func_field"
     struct_field = "struct_field"
     struct_json_encode = "struct_json_encode"
     struct_rename_fields = "struct_rename_fields"
@@ -380,27 +381,7 @@ class ExprEnum(str, enum.Enum):
     # Window
 
 
-# def to_dict(inst) -> "T_DATA":
-#     """
-#     Convert an instance of ``BaseExpr`` to a dict. This dict can be used in
-#     ``BaseExpr.from_dict`` method to create a identical instance of the original
-#     ``BaseExpr`` instance.
-#     """
-#     if isinstance(inst, BaseExpr):
-#         kwargs = dict()
-#         for field in dataclasses.fields(inst.__class__):
-#             value = getattr(inst, field.name)
-#             kwargs[field.name] = to_dict(value)
-#         return rm_na(**kwargs)
-#     elif isinstance(inst, (tuple, list)):
-#         return type(inst)([to_dict(v) for v in inst])
-#     elif isinstance(inst, dict):
-#         kwargs = {k: to_dict(v) for k, v in inst.items()}
-#         return rm_na(**kwargs)
-#     else:
-#         return inst
-
-def to_dict(inst) -> "T_DATA":
+def to_dict(inst) -> T_KWARGS:
     """
     Convert an instance of ``BaseExpr`` to a dict. This dict can be used in
     ``BaseExpr.from_dict`` method to create a identical instance of the original
@@ -416,42 +397,18 @@ def to_dict(inst) -> "T_DATA":
     else:
         return inst
 
+
 @dataclasses.dataclass
-class BaseExpr(DataClass):
+class BaseExpr(BaseModel):
     type: str = dataclasses.field(default=REQ)
-
-    def _validate(self):
-        for field in dataclasses.fields(self.__class__):
-            if field.init:
-                k = field.name
-                if getattr(self, k) is REQ:  # pragma: no cover
-                    raise ParamError(f"Field {k!r} is required for {self.__class__}.")
-
-    def __post_init__(self):
-        self._validate()
-
-    # def to_dict(self) -> T_KWARGS:
-    #     """
-    #     Convert an instance of ``BaseExpr`` to a dict. This dict can be used in
-    #     ``BaseExpr.from_dict`` method to create a identical instance of the original
-    #     ``BaseExpr`` instance.
-    #     """
-    #     return to_dict(self)
 
     def to_dict(self) -> T_KWARGS:
         kwargs = dict()
         for field in dataclasses.fields(self.__class__):
             value = getattr(self, field.name)
             kwargs[field.name] = to_dict(value)
-            # if isinstance(value, (tuple, list)):
-            #     return type(value)([to_dict(v) for v in value])
-            # elif isinstance(value, dict):
-            #     kwargs = {k: to_dict(v) for k, v in value.items()}
-            #     return rm_na(**kwargs)
-            # else:
-            #     return value
-
         return rm_na(**kwargs)
+
     @classmethod
     def from_dict(cls, dct: T_KWARGS):
         """
@@ -460,25 +417,6 @@ class BaseExpr(DataClass):
         """
         req_kwargs, opt_kwargs = cls._split_req_opt(dct)
         return cls(**req_kwargs, **rm_na(**opt_kwargs))
-
-    @classmethod
-    def _split_req_opt(cls, kwargs: T_KWARGS) -> T.Tuple[T_KWARGS, T_KWARGS]:
-        req_kwargs, opt_kwargs = dict(), dict()
-        for field in dataclasses.fields(cls):
-            if isinstance(field.default, _REQUIRED):
-                try:
-                    req_kwargs[field.name] = kwargs[field.name]
-                except KeyError:
-                    raise ParamError(
-                        f"{field.name!r} is a required parameter for {cls}!"
-                    )
-            else:
-                try:
-                    opt_kwargs[field.name] = kwargs[field.name]
-                except KeyError:
-                    pass
-        opt_kwargs = rm_na(**opt_kwargs)
-        return req_kwargs, opt_kwargs
 
     def to_polars(self) -> pl.Expr:
         raise NotImplementedError()

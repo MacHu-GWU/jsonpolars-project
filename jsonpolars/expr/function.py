@@ -4,9 +4,8 @@ import typing as T
 import dataclasses
 
 import polars as pl
-from simpletype.api import T_SIMPLE_SCHEMA, json_type_to_simple_type
+from simpletype.api import json_type_to_simple_type
 
-from ..sentinel import NOTHING, REQUIRED, OPTIONAL, resolve_kwargs
 from ..arg import REQ, NA, rm_na, T_KWARGS
 from ..base_expr import ExprEnum, BaseExpr, expr_enum_to_klass_mapping, parse_expr
 from ..utils_expr import (
@@ -18,7 +17,6 @@ from ..utils_expr import (
     str_to_polars_dtype_mapping,
     polars_dtype_to_str_mapping,
 )
-from ..vendor.better_dataclasses import T_DATA_LIKE
 
 if T.TYPE_CHECKING:  # pragma: no cover
     from .api import T_EXPR
@@ -33,14 +31,14 @@ class Lit(BaseExpr):
 
     type: str = dataclasses.field(default=ExprEnum.func_lit.value)
     value: T.Any = dataclasses.field(default=REQ)
-    dtype: T.Union[str, "pl.DataType"] = dataclasses.field(default=NA)
+    dtype: T.Union[str, "pl.DataType", T.Type["pl.DataType"]] = dataclasses.field(default=NA)
     allow_object: bool = dataclasses.field(default=NA)
 
     def to_dict(self) -> T_KWARGS:
         dct = super().to_dict()
         if "dtype" in dct:
             if isinstance(self.dtype, str):
-                dtype = str_to_polars_dtype_mapping[self.dtype]
+                dtype = self.dtype
             else:
                 try:
                     dtype = polars_dtype_to_str_mapping[type(self.dtype)]

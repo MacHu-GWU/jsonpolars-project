@@ -5,7 +5,7 @@ import dataclasses
 
 import polars as pl
 
-from ..sentinel import NOTHING, REQUIRED, OPTIONAL
+from ..arg import REQ, NA, rm_na, T_KWARGS
 from ..base_expr import ExprEnum, BaseExpr, expr_enum_to_klass_mapping, parse_expr
 
 if T.TYPE_CHECKING:  # pragma: no cover
@@ -19,7 +19,7 @@ class Column(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.column.value)
-    name: str = dataclasses.field(default=REQUIRED)
+    name: str = dataclasses.field(default=REQ)
 
     def to_polars(self) -> pl.Expr:
         return pl.col(self.name)
@@ -35,11 +35,11 @@ class Alias(BaseExpr):
     """
 
     type: str = dataclasses.field(default=ExprEnum.alias.value)
-    name: str = dataclasses.field(default=REQUIRED)
-    expr: "T_EXPR" = dataclasses.field(default=REQUIRED)
+    name: str = dataclasses.field(default=REQ)
+    expr: "T_EXPR" = dataclasses.field(default=REQ)
 
     @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
+    def from_dict(cls, dct: T_KWARGS):
         return cls(
             name=dct["name"],
             expr=parse_expr(dct["expr"]),

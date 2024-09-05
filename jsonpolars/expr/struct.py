@@ -81,12 +81,7 @@ class StructField(BaseExpr):
         else:
             expr = ensure_struct(self.expr)
 
-        if isinstance(self.name, str):
-            name = [self.name]
-        else:
-            name = self.name
-
-        return expr.field(name, *self.more_names)
+        return expr.field(self.name, *self.more_names)
 
 
 expr_enum_to_klass_mapping[ExprEnum.struct_field.value] = StructField

@@ -152,7 +152,6 @@ class FuncStruct(BaseExpr):
                 k: json_type_to_simple_type(v).to_polars()
                 for k, v in self.schema.items()
             }
-
         return pl.struct(
             *batch_to_polars_into_exprs(self.exprs),
             **batch_to_polars_named_into_exprs(self.named_exprs),

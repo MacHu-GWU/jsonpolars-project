@@ -29,7 +29,10 @@ class Case:
         print("---------- expr ----------")
         rprint(self.expr)
         df = self.df_input
-        df1 = df.with_columns(self.expr.to_polars())
+        pl_expr = self.expr.to_polars()
+        print("---------- polars expr ----------")
+        print(pl_expr)
+        df1 = df.with_columns(pl_expr)
         records = df1.to_dicts()
         print("---------- output_records ----------")
         rprint(records)

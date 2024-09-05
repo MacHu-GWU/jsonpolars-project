@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import typing as T
+from ..arg import _PRE
 from .manipulation import Cast
 from .list import List
 from .list import ListGet
@@ -77,6 +78,7 @@ from .struct import StructRenameFields
 from .struct import StructWithFields
 
 T_EXPR = T.Union[
+    _PRE,
     Cast,
     List,
     ListGet,

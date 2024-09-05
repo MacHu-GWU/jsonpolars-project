@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from jsonpolars.expr import api as expr
+from jsonpolars.chain import chain, PRE
 from jsonpolars.tests.expr_case import Case
 
 
@@ -97,6 +98,19 @@ case_field_5 = Case(
         },
     ],
 )
+case_field_6 = Case(
+    input_records=[
+        {"a": {"b": {"c": 1}}},
+    ],
+    expr=chain(
+        expr.Column(name="a"),
+        expr.StructField(expr=PRE, name="b"),
+        expr.Alias(expr=PRE, name="d"),
+    ),
+    expected_output_records=[
+        {"a": {"b": {"c": 1}}, "d": 1},
+    ],
+)
 case_rename_fields_1 = Case(
     input_records=[
         {"data": {"id": 1, "name": "Alice"}},
@@ -123,7 +137,7 @@ case_rename_fields_2 = Case(
         {"data": {"user_name": 1}},
     ],
 )
-case_with_fields = Case(
+case_with_fields_1 = Case(
     input_records=[
         {"data": {"a": 2, "b": 3}},
     ],
@@ -149,6 +163,34 @@ case_with_fields = Case(
         {"data": {"a": 2, "b": 3, "c": 5, "d": 6}},
     ],
 )
+case_with_fields_2 = Case(
+    input_records=[
+        {"data": {"a": 2, "b": 3}},
+    ],
+    expr=chain(
+        expr.Column(name="data"),
+        expr.StructWithFields(
+            expr=PRE,
+            exprs=[
+                chain(
+                    expr.Plus(
+                        left=expr.StructField(name="a"),
+                        right=expr.StructField(name="b"),
+                    ),
+                    expr.Alias(expr=PRE, name="c"),
+                )
+            ],
+            named_exprs={
+                "d": expr.Multiply(
+                    left=expr.StructField(name="a"), right=expr.StructField(name="b")
+                ),
+            },
+        ),
+    ),
+    expected_output_records=[
+        {"data": {"a": 2, "b": 3, "c": 5, "d": 6}},
+    ],
+)
 
 
 def test():
@@ -161,7 +203,8 @@ def test():
     case_field_5.run_with_columns_test()
     case_rename_fields_1.run_with_columns_test()
     case_rename_fields_2.run_with_columns_test()
-    case_with_fields.run_with_columns_test()
+    case_with_fields_1.run_with_columns_test()
+    case_with_fields_2.run_with_columns_test()
 
 
 if __name__ == "__main__":

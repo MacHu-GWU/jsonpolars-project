@@ -5,6 +5,7 @@ from datetime import date, datetime
 
 from simpletype.api import Integer, Struct
 from jsonpolars.expr import api as expr
+from jsonpolars.chain import chain, PRE
 from jsonpolars.utils_expr import PolarsTypeNameEnum
 from jsonpolars.tests.expr_case import Case
 
@@ -272,6 +273,54 @@ case_func_struct_7 = Case(
         },
     ],
 )
+case_func_struct_8 = Case(
+    input_records=[
+        {
+            "a": 1,
+            "b": 2,
+            "struct1": {
+                "c": 3,
+                "d": 4,
+                "struct2": {
+                    "e": 5,
+                    "f": 6,
+                },
+            },
+        },
+    ],
+    expr=chain(
+        expr.FuncStruct(
+            named_exprs=dict(
+                c=expr.StructField(
+                    expr=expr.Column(name="struct1"),
+                    name="c",
+                ),
+                struct2=expr.FuncStruct(
+                    named_exprs=dict(
+                        e=chain(
+                            expr.Column(name="struct1"),
+                            expr.StructField(expr=PRE, name="struct2"),
+                            expr.StructField(expr=PRE, name="e"),
+                        )
+                    ),
+                ),
+            ),
+        ),
+        expr.Alias(expr=PRE, name="struct1"),
+    ),
+    expected_output_records=[
+        {
+            "a": 1,
+            "b": 2,
+            "struct1": {
+                "c": 3,
+                "struct2": {
+                    "e": 5,
+                },
+            },
+        },
+    ],
+)
 case_format = Case(
     input_records=[
         {"col_1": "a", "col_2": 1},
@@ -356,6 +405,7 @@ def test():
     case_func_struct_5.run_with_columns_test()
     case_func_struct_6.run_with_columns_test()
     case_func_struct_7.run_with_columns_test()
+    case_func_struct_8.run_with_columns_test()
     case_format.run_with_columns_test()
     case_date_1.run_with_columns_test()
     case_date_2.run_with_columns_test()

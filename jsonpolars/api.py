@@ -9,3 +9,5 @@ from .base_dfop import DfopEnum
 from .base_dfop import parse_dfop
 from .dfop.api import T_DFOP
 from .dfop import api as dfop
+from .chain import chain
+from .chain import PRE

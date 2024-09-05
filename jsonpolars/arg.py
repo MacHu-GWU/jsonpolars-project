@@ -17,8 +17,16 @@ class _NOTHING:
         return isinstance(other, _NOTHING)
 
 
+@dataclasses.dataclass(frozen=True)
+class _PRE:
+    def __eq__(self, other):
+        print(self, other)
+        return isinstance(other, PRE)
+
+
 REQ = _REQUIRED()
 NA = _NOTHING()
+PRE = _PRE()
 
 T_KWARGS = T.Dict[str, T.Any]
 

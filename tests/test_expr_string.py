@@ -2,9 +2,8 @@
 
 from datetime import datetime, date, timezone
 
-import polars as pl
-
 from jsonpolars.expr import api as expr
+from jsonpolars.chain import chain, PRE
 from jsonpolars.tests.expr_case import Case
 
 
@@ -20,7 +19,6 @@ case_split_1 = Case(
         {"id": ["a", "1"]},
     ],
 )
-
 case_split_2 = Case(
     input_records=[
         {"id": "a-1"},
@@ -28,6 +26,18 @@ case_split_2 = Case(
     expr=expr.Split(
         expr=expr.String(expr=expr.Column(name="id")),
         by="-",
+    ),
+    expected_output_records=[
+        {"id": ["a", "1"]},
+    ],
+)
+case_split_3 = Case(
+    input_records=[
+        {"id": "a-1"},
+    ],
+    expr=chain(
+        expr.Column(name="id"),
+        expr.Split(expr=PRE, by="-"),
     ),
     expected_output_records=[
         {"id": ["a", "1"]},
@@ -352,7 +362,7 @@ case_replace_2 = Case(
         {"text": "current env is dev, target env is prod"},
     ],
 )
-case_replace_all_2 = Case(
+case_replace_all_1 = Case(
     input_records=[
         {"text": "current env is prod, target env is prod"},
     ],
@@ -366,6 +376,23 @@ case_replace_all_2 = Case(
         {"text": "current env is dev, target env is dev"},
     ],
 )
+case_replace_all_2 = Case(
+    input_records=[
+        {"text": "current env is prod, target env is prod"},
+    ],
+    expr=chain(
+        expr.Column(name="text"),
+        expr.StrReplaceAll(
+            expr=PRE,
+            pattern=expr.Lit(value="prod"),
+            value=expr.Lit(value="dev"),
+            literal=True,
+        ),
+    ),
+    expected_output_records=[
+        {"text": "current env is dev, target env is dev"},
+    ],
+)
 
 
 def test():
@@ -373,6 +400,7 @@ def test():
 
     case_split_1.run_with_columns_test()
     case_split_2.run_with_columns_test()
+    case_split_3.run_with_columns_test()
     case_join.run_with_columns_test()
     case_contains_1.run_with_columns_test()
     case_contains_2.run_with_columns_test()
@@ -399,6 +427,7 @@ def test():
     case_slice.run_with_columns_test()
     case_replace_1.run_with_columns_test()
     case_replace_2.run_with_columns_test()
+    case_replace_all_1.run_with_columns_test()
     case_replace_all_2.run_with_columns_test()
 
 

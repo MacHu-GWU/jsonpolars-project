@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import typing as T
+from ..arg import _PRE
 
 {%- for klass in klass_list %}
 from .{{ klass.module_name }} import {{ klass.class_name }}
 {%- endfor %}
 
 T_EXPR = T.Union[
+    _PRE,
     {%- for klass in klass_list %}
     {{ klass.class_name }},
     {%- endfor %}

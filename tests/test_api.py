@@ -16,6 +16,7 @@ def test():
     _ = api.dfop
     _ = api.chain
     _ = api.PRE
+    _ = api.jskit
 
     # --- expr ---
     _ = api.expr.Cast
@@ -103,6 +104,9 @@ def test():
     _ = api.dfop.Sort
     _ = api.dfop.DropNulls
     _ = api.dfop.Count
+
+    # --- jskit ---
+    _ = api.jskit.dot_field
 
 
 if __name__ == "__main__":

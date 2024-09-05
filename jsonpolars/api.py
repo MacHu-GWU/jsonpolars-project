@@ -11,3 +11,4 @@ from .dfop.api import T_DFOP
 from .dfop import api as dfop
 from .chain import chain
 from .chain import PRE
+from . import jskit

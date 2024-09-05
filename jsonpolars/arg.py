@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+Argument manipulation utilities.
+"""
+
 import typing as T
 import dataclasses
 
